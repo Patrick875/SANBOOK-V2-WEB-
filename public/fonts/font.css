@@ -29,3 +29,10 @@
 	font-weight: 200;
 	font-style: light;
 }
+
+@font-face {
+	font-family: "loginDes";
+	src: url("./GentiumBookPlus-Regular.woff") format("woff");
+	font-weight: 400;
+	font-style: normal;
+}

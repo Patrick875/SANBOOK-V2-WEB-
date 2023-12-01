@@ -11,6 +11,11 @@ export default {
 				"primary-black": "#111111",
 				"primary-green": "#136A32",
 				"primary-red": "#E70005",
+				"top-bar": "#F1F5F9",
+			},
+			fontFamily: {
+				nunito: ["Nunito"],
+				loginDes: ["loginDes"],
 			},
 		},
 	},

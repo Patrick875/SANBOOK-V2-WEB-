@@ -4,9 +4,9 @@ interface Props {
 }
 export const Logo = ({ textColor }: Props) => {
 	return (
-		<div className="flex gap-3">
+		<div className="flex items-center gap-3">
 			<img alt="logo" className="block" src={logo} />
-			<p className={`text-bold text-base ${textColor}`}>SANBOOK</p>
+			<p className={`text-bold font-medium text-base ${textColor}`}>SANBOOK</p>
 		</div>
 	);
 };
