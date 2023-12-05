@@ -7,6 +7,10 @@ import { AnimatePresence } from "framer-motion";
 import { AdminDashboard } from "./Scenes/Admin";
 import { Users } from "./Scenes/Admin/Users";
 import { Logs } from "./Scenes/Admin/Logs";
+import { AllUsers } from "./Scenes/Admin/AllUsers";
+import { RegisterUser } from "./Scenes/Admin/RegisterUser";
+import { Dashboard } from "./Scenes/Admin/Dashboard";
+import { PrivateRoutes } from "./shared/PrivateRoutes";
 function App() {
 	const location = useLocation();
 	return (
@@ -17,8 +21,19 @@ function App() {
 						<Route index element={<Login />} />
 						<Route path="reset-password" element={<ResetPassword />} />
 					</Route>
-					<Route path="/admin" element={<AdminDashboard />}>
-						<Route index element={<Users />} />
+					<Route
+						path="/admin"
+						element={
+							<PrivateRoutes
+								element={<AdminDashboard />}
+								allowedPositions={["user"]}
+							/>
+						}>
+						<Route index element={<Dashboard />} />
+						<Route path="users" element={<Users />}>
+							<Route index element={<AllUsers />} />
+							<Route path="register-user" element={<RegisterUser />} />
+						</Route>
 						<Route path="logs" element={<Logs />} />
 					</Route>
 				</Routes>

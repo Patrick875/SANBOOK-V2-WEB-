@@ -1,3 +1,9 @@
+import { Outlet } from "react-router-dom";
+
 export const Users = (props: Props) => {
-	return <div>users</div>;
+	return (
+		<div>
+			<Outlet />
+		</div>
+	);
 };

@@ -1,13 +1,20 @@
 import { NavItem } from "./NavItem";
 import { UsersIcons } from "../../assets/UserIcon";
 import { UserLogs } from "../../assets/UserLogs";
+import { HomeIcons } from "../../assets/HomeIcon";
 
 export const navlinks: navitem[] = [
 	{
-		page: "Users",
+		page: "Dashboard",
 		link: "",
-		icon: <UsersIcons />,
+		icon: <HomeIcons />,
 		location: "admin",
+	},
+	{
+		page: "Users",
+		link: "users",
+		icon: <UsersIcons />,
+		location: "users",
 	},
 	{
 		page: "User logs",
@@ -19,7 +26,7 @@ export const navlinks: navitem[] = [
 
 export const SideBarNav = (props: Props) => {
 	return (
-		<div>
+		<div className="w-full">
 			{navlinks.map((el) => (
 				<NavItem
 					key={crypto.randomUUID()}
