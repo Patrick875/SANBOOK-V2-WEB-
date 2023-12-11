@@ -1,15 +1,17 @@
 //jshint esversion:9
 import { Outlet, Navigate, Link } from "react-router-dom";
-import { SideBarNav } from "./SideBarNav";
-import { useState } from "react";
-import UserProfileIcon from "../../assets/UserProfileIcon";
+import { useState, ReactNode } from "react";
 import { UserLogs } from "../../assets/UserLogs";
-import LogoutIcon from "../../assets/LogoutIcon";
-import { IoIosArrowDown } from "react-icons/io";
+import UserProfileIcon from "../../assets/UserProfileIcon";
 import { useAuth } from "../../Context/AuthContext";
-import { navitem } from "../../types";
-import { HomeIcons } from "../../assets/HomeIcon";
-import { UsersIcons } from "../../assets/UserIcon";
+import { IoIosArrowDown } from "react-icons/io";
+import { SideBarNav } from "../Admin/SideBarNav";
+import { LuLayoutDashboard } from "react-icons/lu";
+import { IoIosPeople } from "react-icons/io";
+import { LiaFileContractSolid } from "react-icons/lia";
+import { FcMoneyTransfer, FcDepartment } from "react-icons/fc";
+import { IoIdCardOutline } from "react-icons/io5";
+import LogoutIcon from "../../assets/LogoutIcon";
 
 interface dropdownItem {
 	icon?: ReactNode;
@@ -88,37 +90,55 @@ const navlinks: navitem[] = [
 	{
 		page: "Dashboard",
 		link: "",
-		icon: <HomeIcons />,
-		location: "admin",
+		icon: <LuLayoutDashboard className="w-4 h-4" />,
+		location: "user",
 	},
 	{
-		page: "Users",
-		link: "users",
-		icon: <UsersIcons />,
-		location: "users",
+		page: "Employees",
+		link: "employees",
+		icon: <IoIosPeople />,
+		location: "employees",
 	},
 	{
-		page: "User logs",
-		link: "logs",
-		icon: <UserLogs />,
-		location: "logs",
+		page: "Contracts",
+		link: "contracts",
+		icon: <LiaFileContractSolid />,
+		location: "contracts",
+	},
+	{
+		page: "Payroll",
+		link: "payroll",
+		icon: <FcMoneyTransfer />,
+		location: "payroll",
+	},
+	{
+		page: "Departments",
+		link: "departments",
+		icon: <FcDepartment />,
+		location: "departments",
+	},
+	{
+		page: "Positions",
+		link: "positions",
+		icon: <IoIdCardOutline />,
+		location: "positions",
 	},
 ];
 
-export const AdminDashboard = () => {
+export const HRDashboard = () => {
 	const { user, isAuth } = useAuth();
 
 	return !isAuth || !user === null ? (
 		<Navigate to="/" />
 	) : (
-		<div className="grid grid-cols-8 w-100 font-nunito">
-			<SideBarNav navlinks={navlinks} backgroundColor="bg-login-blue" />
+		<div className="grid grid-cols-8 w-100 font-nunito bg-[#F5F5F5]">
+			<SideBarNav navlinks={navlinks} backgroundColor="bg-hr-side" />
 			<div className="col-span-6 ">
 				<div className="flex justify-between px-6 py-3 text-black bg-top-bar ">
-					<p className="text-sm font-bold">User Management</p>
+					<p className="text-sm font-bold">Human Resources</p>
 					<TopNavDropdown />
 				</div>
-				<div className="px-6 py-1">
+				<div className="px-6 py-1 ">
 					<Outlet />
 				</div>
 			</div>

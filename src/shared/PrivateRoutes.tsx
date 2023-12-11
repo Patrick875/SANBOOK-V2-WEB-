@@ -21,7 +21,7 @@ export const PrivateRoutes = ({
 		allowedPositions.length !== 0 &&
 		!allowedPositions.includes(user.role)
 	) {
-		<Navigate to="/admin" />;
+		<Navigate to={`/${user.role}`} />;
 	}
 
 	return element;

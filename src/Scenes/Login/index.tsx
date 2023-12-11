@@ -38,7 +38,7 @@ export const Login = (props: Props) => {
 					email: res.data.user.email,
 					role: res.data.user.role,
 				});
-				navigate("/admin");
+				navigate(`/${res.data.user.role}`);
 				reset();
 			})
 			.catch((err) => {

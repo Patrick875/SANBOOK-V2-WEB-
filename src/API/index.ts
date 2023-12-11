@@ -10,6 +10,7 @@ instance.interceptors.response.use(function (response) {
 
     if (response.data && response.data.user) {
         Cookie.set('user', JSON.stringify({
+            userId: response.data.user.id,
             username: response.data.user.username,
             email: response.data.user.email,
             role: response.data.user.role
@@ -22,11 +23,10 @@ instance.interceptors.response.use(function (response) {
 instance.interceptors.request.use(function (request) {
     const user = Cookie.get('user')
 
-
     if (user) {
-
-        request.headers.username = JSON.parse(Cookie.get('user')).username
-
+        const { username, userId } = JSON.parse(Cookie.get('user'))
+        request.headers.username = username
+        request.headers.userId = userId
 
     }
     return request

@@ -1,44 +1,36 @@
+import { Logo } from "../../shared/Logo";
+import { navitem } from "../../types";
 import { NavItem } from "./NavItem";
-import { UsersIcons } from "../../assets/UserIcon";
-import { UserLogs } from "../../assets/UserLogs";
-import { HomeIcons } from "../../assets/HomeIcon";
 
-export const navlinks: navitem[] = [
-	{
-		page: "Dashboard",
-		link: "",
-		icon: <HomeIcons />,
-		location: "admin",
-	},
-	{
-		page: "Users",
-		link: "users",
-		icon: <UsersIcons />,
-		location: "users",
-	},
-	{
-		page: "User logs",
-		link: "logs",
-		icon: <UserLogs />,
-		location: "logs",
-	},
-];
+interface SideBarNavProps {
+	navlinks: navitem[];
+	backgroundColor: string;
+}
 
-export const SideBarNav = (props: Props) => {
+export const SideBarNav = ({ navlinks, backgroundColor }: SideBarNavProps) => {
 	return (
-		<div className="w-full">
-			{navlinks.map((el) => (
-				<NavItem
-					key={crypto.randomUUID()}
-					page={el.page}
-					link={el.link}
-					icon={el.icon}
-					iconActive={el.iconActive}
-					alt={el.alt}
-					location={el.location}>
-					{el.icon}
-				</NavItem>
-			))}
-		</div>
+		<aside
+			className={`sticky top-0 self-start min-h-screen col-span-2 ${backgroundColor} `}>
+			<div className=" flex flex-col min-w-[24vw]">
+				<div className="p-4 basis-1/8">
+					<Logo textColor="text-primary-white" />
+				</div>
+				<div className="w-full">
+					{navlinks.map((el) => (
+						<NavItem
+							key={crypto.randomUUID()}
+							page={el.page}
+							link={el.link}
+							icon={el.icon}
+							defaultColor={backgroundColor}
+							iconActive={el.iconActive}
+							alt={el.alt}
+							location={el.location}>
+							{el.icon}
+						</NavItem>
+					))}
+				</div>
+			</div>
+		</aside>
 	);
 };
