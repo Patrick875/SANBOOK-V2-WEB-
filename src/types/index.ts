@@ -11,3 +11,7 @@ export interface navitem {
     icon: ReactElement;
     location: string
 }
+export interface modalProps {
+    show: boolean;
+    setShow: (show: boolean) => void
+}

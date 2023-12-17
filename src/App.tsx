@@ -30,6 +30,14 @@ import EmployeeWorkData from "./Scenes/HR/EmployeeWorkData";
 import EmployeeContractData from "./Scenes/HR/EmployeeContractData";
 import EmployeePersonalData from "./Scenes/HR/EmployeePersonalData";
 import EmployeeAdditionalData from "./Scenes/HR/EmployeeAdditionalData";
+import AddEmployeeWarning from "./Scenes/HR/AddEmployeeWarning";
+import ViewEmployeeWarning from "./Scenes/HR/ViewEmployeeWarning";
+import ContractViewLayout from "./Scenes/HR/ContractViewLayout ";
+import ContractBasicInfo from "./Scenes/HR/ContractBasicInfo";
+import ContractEmploymentPeriod from "./Scenes/HR/ContractEmploymentPeriod";
+import ContractSalaryAndFacilities from "./Scenes/HR/ContractSalaryAndFacilities";
+import ContractTermsAndConditions from "./Scenes/HR/ContractTermsAndConditions";
+import { CreateContractDetailsProvider } from "./Context/CreateContractContext";
 function App() {
 	const location = useLocation();
 	return (
@@ -69,6 +77,8 @@ function App() {
 							<Route path="create-new" element={<CreateEmployee />} />
 							<Route path=":emid" element={<Employee />}>
 								<Route index element={<EmployeeWorkData />} />
+								<Route path="addwarning" element={<AddEmployeeWarning />} />
+								<Route path="viewwarning" element={<ViewEmployeeWarning />} />
 								<Route path="contract" element={<EmployeeContractData />} />
 								<Route path="personaldata" element={<EmployeePersonalData />} />
 								<Route
@@ -89,6 +99,18 @@ function App() {
 							<Route path="create" element={<CreatePosition />} />
 							<Route path=":posid" element={<Position />} />
 						</Route>
+					</Route>
+					<Route
+						path="/add-contract"
+						element={
+							<CreateContractDetailsProvider>
+								<ContractViewLayout />
+							</CreateContractDetailsProvider>
+						}>
+						<Route index element={<ContractBasicInfo />} />
+						<Route path="period" element={<ContractEmploymentPeriod />} />
+						<Route path="salary" element={<ContractSalaryAndFacilities />} />
+						<Route path="terms" element={<ContractTermsAndConditions />} />
 					</Route>
 				</Routes>
 			</AnimatePresence>

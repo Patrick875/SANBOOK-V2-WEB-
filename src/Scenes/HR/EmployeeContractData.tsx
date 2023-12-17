@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface Props {}
 
 const EmployeeContractData = (props: Props) => {
@@ -11,7 +13,9 @@ const EmployeeContractData = (props: Props) => {
 							Terminate Current Contract
 						</button>
 						<button className="  shadow-md rounded-sm text-primary-white  text-xs px-4  bg-[#176B87]">
-							Add New Contract
+							<Link to="/add-contract" className="w-full text-center">
+								Add New Contract
+							</Link>
 						</button>
 					</div>
 				</div>

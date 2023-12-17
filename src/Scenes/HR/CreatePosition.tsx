@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { BackButton } from "../../shared/BackButton";
 import { useFetchData } from "../../hooks/useFetchData";
 import { IoIosAdd, IoIosCheckmark } from "react-icons/io";
 import instance from "../../API";
+import AddAdvantageModal from "./AddAdvantageModal";
+import AddDeductionModal from "./AddDeductionModal";
 
 interface Props {}
 interface opt {
@@ -19,11 +21,17 @@ interface duty {
 }
 
 export const CreatePosition = (props: Props) => {
+	const [showAddAdvntageModel, setShowAddAdvantageModel] =
+		useState<boolean>(false);
+	const [showAddDeductionModel, setShowAddDeductionModel] =
+		useState<boolean>(false);
 	const { register, handleSubmit, watch, reset } = useForm();
 	const [deps] = useFetchData("/hr/departments");
 	const [positions] = useFetchData("/hr/positions");
 	const [advs] = useFetchData("/system/hr/advs");
 	const [deds] = useFetchData("/system/hr/deds");
+	const [formSubmitted, setFormSubmitted] = useState<boolean>(false);
+
 	const defaultDuties: duty[] = [{ id: "909cq", value: "" }];
 	const [duties, setDuties] = useState<duty[]>(defaultDuties);
 	const addedAdvs = watch("salaryAdvs");
@@ -90,6 +98,7 @@ export const CreatePosition = (props: Props) => {
 				console.log("submitted");
 			});
 	};
+	useEffect(() => {}, [formSubmitted]);
 
 	return (
 		<div>
@@ -205,6 +214,7 @@ export const CreatePosition = (props: Props) => {
 								<p className="text-xs">No salary advantages added</p>
 							)}
 							<button
+								onClick={() => setShowAddAdvantageModel(true)}
 								type="button"
 								className="flex items-center gap-2 px-4 text-xs shadow-lg rounded-sm bg-[#F5F5F5] text-login-blue ">
 								<IoIosAdd className="w-5 h-5" />
@@ -235,6 +245,9 @@ export const CreatePosition = (props: Props) => {
 							)}
 							<button
 								type="button"
+								onClick={() => {
+									setShowAddDeductionModel(true);
+								}}
 								className="flex items-center gap-2 px-4 text-xs bg-[#F5F5F5] rounded-sm shadow-lg text-login-blue ">
 								<IoIosAdd className="w-5 h-5" />
 								<p>Add</p>
@@ -257,6 +270,16 @@ export const CreatePosition = (props: Props) => {
 					</button>
 				</div>
 			</form>
+			<AddAdvantageModal
+				show={showAddAdvntageModel}
+				setShow={setShowAddAdvantageModel}
+				formSubmitted={formSubmitted}
+				setFormSubmitted={setFormSubmitted}
+			/>
+			<AddDeductionModal
+				show={showAddDeductionModel}
+				setShow={setShowAddDeductionModel}
+			/>
 		</div>
 	);
 };

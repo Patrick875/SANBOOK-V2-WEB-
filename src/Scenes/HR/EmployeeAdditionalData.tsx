@@ -1,7 +1,5 @@
-type Props = {};
-
-const EmployeeAdditionalData = (props: Props) => {
-	return <div>EmployeeAdditionalData</div>;
+const EmployeeAdditionalData = () => {
+	return <div>additional -data</div>;
 };
 
 export default EmployeeAdditionalData;

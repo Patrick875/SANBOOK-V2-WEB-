@@ -1,6 +1,9 @@
 import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FcCancel } from "react-icons/fc";
+import { Link, useOutletContext } from "react-router-dom";
+import { useFetchData } from "../../hooks/useFetchData";
+import { ScaleLoader } from "react-spinners";
 
 interface Props {}
 
@@ -44,6 +47,11 @@ const warnings = [
 ];
 
 const EmployeeWorkData = (props: Props) => {
+	const { employee } = useOutletContext();
+	const [data, loading, error] = useFetchData(
+		`/hr/warnings/${employee && employee.id}`
+	);
+
 	return (
 		<div className="grid w-full grid-cols-10 gap-4 ">
 			<div className="col-span-5 p-4 text-xs font-bold bg-white ">
@@ -102,17 +110,24 @@ const EmployeeWorkData = (props: Props) => {
 						</div>
 					</form>
 				</div>
-				{warnings &&
-					warnings.map((el) => (
+				{loading && (
+					<div className="w-full  text-login-blue bg-[#E4F1FE] flex justify-center">
+						<ScaleLoader color="#0C4981" size={15} loading={loading} />
+					</div>
+				)}
+				{data &&
+					data.map((el) => (
 						<div className=" my-2 bg-[#FDF6F5]  p-2">
 							<p>{el.title}</p>
-							<p className="pt-2 text-xs font-medium">{el.datefor}</p>
+							<p className="pt-2 text-xs font-medium">{el.issuedon}</p>
 						</div>
 					))}
 
-				<button className="mt-4 w-full text-center shadow-md bg-[#176B87] py-1 rounded-sm text-primary-white">
+				<Link
+					to="addwarning"
+					className=" block mt-4 w-full text-center shadow-md bg-[#176B87] py-1 rounded-sm text-primary-white">
 					Add
-				</button>
+				</Link>
 			</div>
 		</div>
 	);

@@ -87,11 +87,9 @@ export const CreateDepartment = (props: Props) => {
 					)}
 					{success && (
 						<div className="flex justify-center w-full mt-2 bg-[#D4E7DB] border border-teal-800">
-							{success && (
-								<p className="text-center text-teal-800">
-									Department created SuccessFull
-								</p>
-							)}
+							<p className="text-center text-teal-800">
+								Department created SuccessFull
+							</p>
 						</div>
 					)}
 				</form>

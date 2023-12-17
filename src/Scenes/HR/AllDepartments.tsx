@@ -1,12 +1,20 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { CgMergeVertical } from "react-icons/cg";
 import { useFetchData } from "../../hooks/useFetchData";
 import { MdOutlineDeleteForever } from "react-icons/md";
+import DeleteItemModal from "./DeleteItemModal";
 
 interface Props {}
-
+interface selectedDepartment {
+	id: number;
+	name: string;
+}
 export const AllDepartments = (props: Props) => {
 	const [data, loading, error] = useFetchData("/hr/departments");
+	const [show, setShow] = useState<boolean>(false);
+	const [selectedDepartment, setSelectedDepartment] =
+		useState<selectedDepartment | null>(null);
 
 	return (
 		<div>
@@ -63,6 +71,15 @@ export const AllDepartments = (props: Props) => {
 										</Link>
 										<Link
 											to="#"
+											onClick={() => {
+												setSelectedDepartment((prev) => ({
+													id: el.id,
+													name: el.name,
+												}));
+												if (selectedDepartment) {
+													setShow((prev) => true);
+												}
+											}}
 											className="flex items-center gap-2 px-5 py-1 font-medium text-white bg-pink-800 ">
 											<p>Delete</p>
 											<MdOutlineDeleteForever className="w-4 h-4 text-primary-white" />
@@ -71,6 +88,15 @@ export const AllDepartments = (props: Props) => {
 								</td>
 							</tr>
 						))
+					)}
+					{selectedDepartment && (
+						<DeleteItemModal
+							show={show}
+							setShow={setShow}
+							itemId={selectedDepartment.id}
+							itemType={selectedDepartment.name}
+							deleteUrl="hr/departments"
+						/>
 					)}
 					{error && <p>{error.message}</p>}
 				</tbody>

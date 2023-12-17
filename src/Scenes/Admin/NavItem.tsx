@@ -16,7 +16,6 @@ export const NavItem = ({
 }: Props) => {
 	const { pathname } = useLocation();
 	const url = pathname.split("/");
-	console.log(defaultColor);
 
 	return (
 		<NavLink
