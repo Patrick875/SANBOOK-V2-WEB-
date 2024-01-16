@@ -33,11 +33,30 @@ import EmployeeAdditionalData from "./Scenes/HR/EmployeeAdditionalData";
 import AddEmployeeWarning from "./Scenes/HR/AddEmployeeWarning";
 import ViewEmployeeWarning from "./Scenes/HR/ViewEmployeeWarning";
 import ContractViewLayout from "./Scenes/HR/ContractViewLayout ";
-import ContractBasicInfo from "./Scenes/HR/ContractBasicInfo";
-import ContractEmploymentPeriod from "./Scenes/HR/ContractEmploymentPeriod";
-import ContractSalaryAndFacilities from "./Scenes/HR/ContractSalaryAndFacilities";
-import ContractTermsAndConditions from "./Scenes/HR/ContractTermsAndConditions";
-import { CreateContractDetailsProvider } from "./Context/CreateContractContext";
+import StockPage from "./Scenes/Stock";
+import StockDashboard from "./Scenes/Stock/Dashboard/StockDashboard";
+import Requests from "./Scenes/Stock/Requests/Requests";
+import Stock from "./Scenes/Stock/Stock/Stock";
+import PurchaseOrders from "./Scenes/Stock/PurchaseOrders/index";
+import ReceiveVauchers from "./Scenes/Stock/ReceiveVauchers/ReceiveVauchers";
+import Suppliers from "./Scenes/Stock/Suppliers/Suppliers";
+import CostingCenters from "./Scenes/Stock/CostingCenters/CostingCenters";
+import Stores from "./Scenes/Stock/Stores/Stores";
+import StockItems from "./Scenes/Stock/Item/StockItems";
+import ItemCategories from "./Scenes/Stock/ItemCategories/ItemCategories";
+import Reports from "./Scenes/Stock/Reports/Reports";
+import CreateStore from "./Scenes/Stock/Stores/CreateStore";
+import StoresIndex from "./Scenes/Stock/Stores/StoresIndex";
+import Profile from "./shared/Profile";
+import PersonalLogs from "./shared/PersonalLogs";
+import AllItemCategories from "./Scenes/Stock/ItemCategories/AllItemCategories";
+import AddItemCategory from "./Scenes/Stock/ItemCategories/AddItemCategory";
+import AllStockItems from "./Scenes/Stock/Item/AllStockItems";
+import CreateItem from "./Scenes/Stock/Item/CreateItem";
+import StoreDetails from "./Scenes/Stock/Stores/StoreDetails";
+import AllPurchaseOrders from "./Scenes/Stock/PurchaseOrders/AllPurchaseOrders";
+import CreatePurchaseOrder from "./Scenes/Stock/PurchaseOrders/CreatePurchaseOrder";
+import { BackButton } from "./shared/BackButton";
 function App() {
 	const location = useLocation();
 	return (
@@ -80,6 +99,7 @@ function App() {
 								<Route path="addwarning" element={<AddEmployeeWarning />} />
 								<Route path="viewwarning" element={<ViewEmployeeWarning />} />
 								<Route path="contract" element={<EmployeeContractData />} />
+								<Route path="add-contract" element={<ContractViewLayout />} />
 								<Route path="personaldata" element={<EmployeePersonalData />} />
 								<Route
 									path="additionaldata"
@@ -87,7 +107,6 @@ function App() {
 								/>
 							</Route>
 						</Route>
-
 						<Route path="contracts" element={<Contracts />} />
 						<Route path="payroll" element={<Payroll />} />
 						<Route path="departments" element={<Departments />}>
@@ -99,19 +118,56 @@ function App() {
 							<Route path="create" element={<CreatePosition />} />
 							<Route path=":posid" element={<Position />} />
 						</Route>
+						<Route path="my-profile" element={<Profile />} />
+						<Route path="mylogs" element={<PersonalLogs />} />
+					</Route>
+					<Route path="/add-contract" element={<ContractViewLayout />} />
+					<Route
+						path="/stock"
+						element={
+							<PrivateRoutes
+								element={<StockPage />}
+								allowedPositions={["user"]}
+							/>
+						}>
+						<Route index element={<StockDashboard />} />
+						<Route path="requests" element={<Requests />} />
+						<Route path="storage" element={<Stock />} />
+						<Route path="purchase-orders" element={<PurchaseOrders />}>
+							<Route index element={<AllPurchaseOrders />} />
+							<Route path="create" element={<CreatePurchaseOrder />} />
+						</Route>
+						<Route path="receive-vauchers" element={<ReceiveVauchers />} />
+						<Route path="suppliers" element={<Suppliers />} />
+						<Route path="costing-centers" element={<CostingCenters />} />
+						<Route path="stores" element={<StoresIndex />}>
+							<Route index element={<Stores />} />
+							<Route path="create" element={<CreateStore />} />
+							<Route path=":name" element={<StoreDetails />} />
+						</Route>
+						<Route path="item-categories" element={<ItemCategories />}>
+							<Route index element={<AllItemCategories />} />
+							<Route path="create" element={<AddItemCategory />} />
+						</Route>
+						<Route path="stock-items" element={<StockItems />}>
+							<Route index element={<AllStockItems />} />
+							<Route path="create" element={<CreateItem />} />
+						</Route>
+						<Route path="reports" element={<Reports />} />
 					</Route>
 					<Route
-						path="/add-contract"
+						path="*"
 						element={
-							<CreateContractDetailsProvider>
-								<ContractViewLayout />
-							</CreateContractDetailsProvider>
-						}>
-						<Route index element={<ContractBasicInfo />} />
-						<Route path="period" element={<ContractEmploymentPeriod />} />
-						<Route path="salary" element={<ContractSalaryAndFacilities />} />
-						<Route path="terms" element={<ContractTermsAndConditions />} />
-					</Route>
+							<div className="flex flex-col items-center justify-center w-full min-h-screen p-8">
+								<div>
+									<p className="my-3">
+										Hey There Lad... You lost or what ? Get back to safety{" "}
+									</p>
+									<BackButton />
+								</div>
+							</div>
+						}
+					/>
 				</Routes>
 			</AnimatePresence>
 		</>

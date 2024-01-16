@@ -1,36 +1,87 @@
-import React from "react";
 import ContractSectionInfo from "./ContractSectionInfo";
+import { useAppSelector } from "../../hooks/reduxHooks";
+import { createContractSelector } from "./contractSlice";
+import { useForm } from "react-hook-form";
+import { contractStepProps } from "../../types";
 
-type Props = {};
+const ContractSalaryAndFacilities = ({
+	updateStep,
+	currentStep,
+}: contractStepProps) => {
+	const contractDetails = useAppSelector(createContractSelector);
+	const { register } = useForm();
 
-const ContractSalaryAndFacilities = (props: Props) => {
 	return (
 		<>
-			<div className="px-2 basis-2/4">
+			<div className="p-8 basis-2/4">
 				<p className="py-1 font-bold ">Salary and Facilities</p>
-				<p className="inline-block text-xs font-medium pe-2 ">
-					For the agreed period the salary is fixed at
-				</p>
-				<input className="rounded-sm w-1/5 bg-[#EFEFEF] " />
-				<p className="inline-block px-2 text-xs font-medium ">RWF </p>
+				<div>
+					<div className="flex w-full gap-2">
+						<div className="flex-1 w-full">
+							<label className="block py-2 text-xs font-normal">
+								Gross Salary{" "}
+							</label>
 
-				<p className="my-5 text-xs font-medium pe-2 ">Deductions on salary</p>
+							<input
+								placeholder="40000"
+								type="number"
+								min={0}
+								step={1}
+								readOnly={true}
+								value={contractDetails.employee?.Position.grossSalary}
+								className=" bg-[#F5F5F5] rounded-md   placeholder:ps-3  placeholder:text-xs placeholder:font-normal"
+								{...register("grossSalary")}
+							/>
+						</div>
+						<div className="flex-1 w-full">
+							<label className="block py-2 text-xs font-normal">
+								Net Salary{" "}
+							</label>
 
-				<ul className="py-4 text-xs ps-2">
-					<li>Deduction 1 </li>
-					<li>Deduction 2 </li>
-					<li>Deduction 3 </li>
-					<li>Deduction 4 </li>
-				</ul>
+							<input
+								placeholder="40000"
+								type="number"
+								min={0}
+								step={1}
+								readOnly={true}
+								value={contractDetails.employee?.Position.netSallary}
+								className=" bg-[#F5F5F5] rounded-md   placeholder:ps-3  placeholder:text-xs placeholder:font-normal"
+								{...register("netSalary")}
+							/>
+						</div>
+					</div>
+					<p className="my-2">Benefits</p>
+					<div className="grid grid-cols-3">
+						{contractDetails?.employee?.Position.SalaryAdvantages.length !==
+							0 &&
+							contractDetails?.employee?.Position.SalaryAdvantages.map((el) => (
+								<p className="text-xs ">
+									{el.name} {el.amount}
+								</p>
+							))}
+					</div>
 
-				<p className="py-3 text-xs font-medium pe-2 ">Other facilities</p>
-
-				<ul className="py-4 text-xs ps-2">
-					<li>Facility 1 </li>
-					<li>Facility 2 </li>
-					<li>Facility 3 </li>
-					<li>Facility 4 </li>
-				</ul>
+					<p className="my-2 text-sm">Deductions</p>
+					<div className="grid grid-cols-3">
+						{contractDetails?.employee?.Position.SalaryDeductions.length !==
+							0 &&
+							contractDetails?.employee?.Position.SalaryDeductions.map((el) => (
+								<p className="text-xs ">
+									{el.name} {el.amount}
+								</p>
+							))}
+					</div>
+				</div>
+				<div className="flex justify-end my-2">
+					<button
+						onClick={() => {
+							//saveCurrentValues();
+							updateStep(currentStep + 1);
+						}}
+						className="px-6 py-1 text-xs font-medium text-white bg-emerald-950">
+						Next
+					</button>
+				</div>
 			</div>
 			<ContractSectionInfo
 				title="Salary and Employee facilities"

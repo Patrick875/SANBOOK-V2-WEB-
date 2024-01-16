@@ -4,10 +4,12 @@ export default {
 	theme: {
 		extend: {
 			colors: {
+				"tab-content": "#F0F0F0",
 				"primary-blue": "#053B50",
 				"secondary-blue": "#176B87",
 				"login-blue": "#0C4981",
 				"hr-side": "#053B50",
+				"stock-side": "#14213D",
 				"primary-white": "#FAFAFA",
 				"primary-black": "#111111",
 				"primary-green": "#136A32",

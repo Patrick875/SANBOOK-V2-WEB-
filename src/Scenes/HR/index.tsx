@@ -30,16 +30,15 @@ const DropdownItem = ({ text, icon, link }: dropdownItem) => {
 const TopNavDropdown = () => {
 	const { user, logoutUser } = useAuth();
 	const [profileOn, setProfileOn] = useState(false);
-
 	const dropdownItems: dropdownItem[] = [
 		{
 			text: "Personal logs",
-			link: "/mylogs",
+			link: "mylogs",
 			icon: <UserLogs />,
 		},
 		{
 			text: "Profile",
-			link: "/my-profile",
+			link: "my-profile",
 			icon: <UserProfileIcon />,
 		},
 	];

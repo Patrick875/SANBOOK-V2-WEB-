@@ -1,8 +1,7 @@
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 
-interface Props {}
-
-const EmployeeContractData = (props: Props) => {
+const EmployeeContractData = () => {
+	const { employee } = useOutletContext();
 	return (
 		<div>
 			<div>
@@ -27,7 +26,7 @@ const EmployeeContractData = (props: Props) => {
 					<thead className="border-2 border-slate-800">
 						<tr>
 							<th className="w-20 p-3 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
-								Date
+								Date Created
 							</th>
 							<th className="w-20 p-3 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 								File
@@ -35,28 +34,26 @@ const EmployeeContractData = (props: Props) => {
 						</tr>
 					</thead>
 
-					<tbody className="border-2 border-slate-800">
-						<tr
-							key={crypto.randomUUID()}
-							className="border-b-2 border-slate-800">
-							<td className="p-3 text-xs capitalize whitespace-nowrap">
-								{new Date().toDateString()}
-							</td>
-							<td className="p-3 text-xs capitalize whitespace-nowrap">
-								file 1
-							</td>
-						</tr>
-						<tr
-							key={crypto.randomUUID()}
-							className="border-b-2 border-slate-800">
-							<td className="p-3 text-xs capitalize whitespace-nowrap">
-								{new Date().toDateString()}
-							</td>
-							<td className="p-3 text-xs capitalize whitespace-nowrap">
-								file 2
-							</td>
-						</tr>
-					</tbody>
+					{employee &&
+					employee.EmployeeContracts &&
+					employee.EmployeeContracts.length !== 0 ? (
+						<tbody className="border-2 border-slate-800">
+							{employee.EmployeeContracts.map((contr) => (
+								<tr>
+									<td>
+										{new Date(contr.createdAt).toLocaleDateString("fr-FR")}
+									</td>
+									<td></td>
+								</tr>
+							))}
+						</tbody>
+					) : (
+						<tbody>
+							<tr>
+								<td colSpan={3}>No contracts yet </td>
+							</tr>
+						</tbody>
+					)}
 				</table>
 			</div>
 		</div>

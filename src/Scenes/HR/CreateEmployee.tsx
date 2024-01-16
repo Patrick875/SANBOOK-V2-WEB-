@@ -194,7 +194,7 @@ export const CreateEmployee = (props: Props) => {
 							{...register("department")}>
 							{deps &&
 								deps.map((dep) => (
-									<option className="capitalize" value={dep.id}>
+									<option key={dep.id} className="capitalize" value={dep.id}>
 										{dep.name}
 									</option>
 								))}
@@ -207,7 +207,7 @@ export const CreateEmployee = (props: Props) => {
 							{...register("position")}>
 							{positions &&
 								positions.map((pos) => (
-									<option className="capiltalize" value={pos.id}>
+									<option key={pos.id} className="capiltalize" value={pos.id}>
 										{pos.name}
 									</option>
 								))}

@@ -7,17 +7,17 @@ import instance from "../../API";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../Context/AuthContext";
 import { HashLoader } from "react-spinners";
+import { useAppDispatch } from "../../hooks/reduxHooks";
+import { loginAuthUser } from "../../shared/userSlice";
+import { error } from "../../types";
 
 interface loginData {
 	username: string;
 	email: string;
 }
-interface error {
-	status: boolean;
-	message: string;
-}
 
-export const Login = (props: Props) => {
+export const Login = () => {
+	const dispatch = useAppDispatch();
 	const { loginUser } = useAuth();
 	const [success, setSuccess] = useState<boolean>(false);
 	const [error, setError] = useState<error | null>(null);
@@ -33,11 +33,21 @@ export const Login = (props: Props) => {
 			.post("/login", data)
 			.then((res) => {
 				setSuccess(true);
+				console.log("res", res);
 				loginUser({
 					username: res.data.user.username,
 					email: res.data.user.email,
 					role: res.data.user.role,
 				});
+				dispatch(
+					loginAuthUser({
+						username: res.data.user.username,
+						fullname: res.data.user.Employee?.fullname,
+						email: res.data.user.email,
+						role: res.data.user.role,
+						employeeId: res.data.user.Employee?.id,
+					})
+				);
 				navigate(`/${res.data.user.role}`);
 				reset();
 			})

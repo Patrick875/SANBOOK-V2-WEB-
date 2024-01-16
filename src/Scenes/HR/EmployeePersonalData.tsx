@@ -4,9 +4,7 @@ import { useForm } from "react-hook-form";
 import { CiImageOn } from "react-icons/ci";
 import { useOutletContext } from "react-router-dom";
 
-type Props = {};
-
-const EmployeePersonalData = (props: Props) => {
+const EmployeePersonalData = () => {
 	const { employee } = useOutletContext();
 	const [deps] = useFetchData("/hr/departments");
 	const [positions] = useFetchData("/hr/positions");

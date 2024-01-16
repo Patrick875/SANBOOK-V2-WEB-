@@ -1,4 +1,4 @@
-export default function UserProfileIcon(props: Props) {
+export default function UserProfileIcon() {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"

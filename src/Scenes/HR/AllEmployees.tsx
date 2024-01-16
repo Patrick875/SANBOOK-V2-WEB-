@@ -5,10 +5,10 @@ import { useFetchData } from "../../hooks/useFetchData";
 import { LiaFileContractSolid } from "react-icons/lia";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FcCancel } from "react-icons/fc";
+import { addEmployee } from "./contractSlice";
+import { useAppDispatch } from "../../hooks/reduxHooks";
 
-interface Props {}
-
-export const AllEmployees = (props: Props) => {
+export const AllEmployees = () => {
 	const navigate = useNavigate();
 	const [data, loading, error] = useFetchData("/hr/employees");
 	const styleStatus = (status: string) => {
@@ -32,8 +32,9 @@ export const AllEmployees = (props: Props) => {
 			};
 		}
 	};
-
 	const { register } = useForm();
+	const dispatch = useAppDispatch();
+
 	return (
 		<div>
 			<div className="flex items-center w-full gap-4">
@@ -42,7 +43,7 @@ export const AllEmployees = (props: Props) => {
 					<MagnifyingGlassIcon className="w-5 h-5 text-login-blue" />
 					<input
 						placeholder="Search"
-						className="bg-transparent  rounded=full focus:outline-none focus-border-none placeholder:text-sm placeholder:font-bold"
+						className="bg-transparent rounded-full focus:outline-none focus-border-none placeholder:text-sm placeholder:font-bold"
 						{...register("query")}
 					/>
 				</form>
@@ -108,6 +109,26 @@ export const AllEmployees = (props: Props) => {
 									className="cursor-pointer"
 									onClick={() => {
 										navigate(`${el.id}`);
+
+										dispatch(
+											addEmployee({
+												fullname: el.fullname,
+												id: el.id,
+												Position: {
+													name: el.Position.name,
+													id: el.Position.id,
+													duties: el.Position.duties,
+													grossSalary: el.Position.grossSalary,
+													netSallary: el.Position.netSalary,
+													Department: {
+														id: el.Department.id,
+														name: el.Department.name,
+													},
+													SalaryAdvantages: el.Position.SalaryAdvantages,
+													SalaryDeductions: el.Position.SalaryDeductions,
+												},
+											})
+										);
 									}}>
 									<td className="p-3 text-xs capitalize whitespace-nowrap">
 										{el.fullname}

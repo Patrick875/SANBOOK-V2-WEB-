@@ -1,0 +1,127 @@
+.container {
+	font-family: "Poppins", sans-serif;
+	width: 100%;
+	padding: 0 10px;
+	margin: 0 auto;
+	margin-top: 0px;
+}
+
+.editableTable {
+	table {
+		padding: 0;
+		margin: 0;
+		width: 100%;
+	}
+	tbody:last-child {
+		border-bottom: 2px solid #cfcfcf;
+	}
+
+	th {
+		font-size: 18px;
+		padding: 1px;
+		border-bottom: 2px solid #cfcfcf;
+		text-align: left;
+	}
+
+	thead > tr {
+		border-bottom: 2px solid #cfcfcf;
+	}
+
+	tbody > tr td {
+		border: 0px 0px 0px 0px solid #000000;
+		text-align: left;
+	}
+
+	tr td {
+		border-bottom: 2px solid #cfcfcf !important;
+		/* border-right: 2px solid #000000 !important; */
+	}
+	.lastRows td {
+		border-bottom: 2px solid #cfcfcf;
+		text-align: left;
+	}
+
+	input,
+	tr > div {
+		font-size: 16px;
+		background-color: transparent;
+		border: none;
+		width: 100%;
+		padding: 6px 8px;
+		font-family: "Poppins", sans-serif;
+	}
+
+	input[type="date"]::placeholder {
+		visibility: hidden;
+		display: none;
+		color: red;
+	}
+
+	input:hover {
+		background-color: #fffaf3;
+	}
+
+	input:focus {
+		outline: 1px solid #ccc;
+		border: 1px solid #ccc;
+	}
+}
+.editableTableReturn {
+	table {
+		padding: 0;
+		margin: 0;
+		width: 100%;
+	}
+
+	th {
+		font-size: 18px;
+		padding: 1px;
+		border-left: 2px solid #000000;
+		text-align: left;
+	}
+
+	thead > tr {
+		border: 2px solid #000000;
+	}
+
+	tbody > tr td {
+		border: 2px solid #000000;
+		text-align: left;
+	}
+
+	tr td {
+		border: 2px solid #000000 !important;
+	}
+	.lastRows td {
+		border: 2px solid #000000;
+		text-align: left;
+	}
+
+	input,
+	select,
+	option {
+		font-size: 16px;
+		background-color: transparent;
+		border: none;
+		width: 100%;
+		padding: 6px 12px;
+		font-family: "Poppins", sans-serif;
+	}
+
+	input[type="date"]::placeholder {
+		visibility: hidden;
+		display: none;
+		color: red;
+	}
+
+	input:hover {
+		background-color: #fffaf3;
+	}
+
+	input:focus {
+		outline: 1px solid #ccc;
+		border: 1px solid #ccc;
+	}
+}
+
+/* CSS */

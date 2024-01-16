@@ -4,8 +4,6 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { useFetchData } from "../../hooks/useFetchData";
 
-//jshint esversion:9
-interface Props {}
 interface opt {
 	id: number;
 	name: string;
@@ -14,12 +12,11 @@ interface opt {
 	createdBy: number;
 }
 
-export const AllPositions = (props: Props) => {
+export const AllPositions = () => {
 	const { register } = useForm();
 	const [data, loading, error] = useFetchData("/hr/positions");
-	const [searchData, setSearchData] = useState();
-	const [isSearching, setIsSearching] = useState(false);
-	console.log(data);
+	// const [searchData, setSearchData] = useState();
+	// const [isSearching, setIsSearching] = useState(false);
 
 	return (
 		<div>
