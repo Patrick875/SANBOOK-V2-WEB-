@@ -1,4 +1,4 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { CheckIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { useFetchData } from "../../../hooks/useFetchData";
 import EditableTable from "../../../shared/EditableTable";
@@ -8,37 +8,71 @@ import { purcPlaceholder } from "../../../types";
 import { Logo } from "../../../shared/Logo";
 import { BsPrinter } from "react-icons/bs";
 import instance from "../../../API";
+import usePostData from "../../../hooks/usePostData";
+import PurchaseOrderFooter from "../PurchaseOrderFooter";
 
 const CreatePurchaseOrder = () => {
+	const { postData, isLoading } = usePostData();
 	const { register, watch } = useForm();
-	const query = watch("query") || "";
 	const category = watch("category") || 0;
 	const store = watch("store") || 0;
 	const [searchResults, setSearchResults] = useState([]);
+	const [selectedItems, setSelectedItems] = useState([]);
 	let [requestItems, setRequestItems] = useState<purcPlaceholder[]>([
 		...initialRows,
 	]);
-	const [categories] = useFetchData("/stock/categories");
-	const [stores] = useFetchData("/stock/stores");
-	const addItemToOrder = () => {
-		setRequestItems([
-			...requestItems,
-			{
-				id: crypto.randomUUID(),
-				name: "",
-				quantity: 0,
-				times: 0,
-				price: 0,
-				date: "",
-			},
-		]);
+
+	const replaceItemWithIndex = (index, selectedItem) => {
+		const updatedRows = [...requestItems];
+		updatedRows[index] = {
+			...updatedRows[index],
+			id: selectedItem.id,
+			name: selectedItem.name,
+			price: selectedItem.price,
+		};
+		setRequestItems(updatedRows);
+	};
+	const updateRequestItems = (selectedItem) => {
+		if (selectedItems.length === 0) {
+			const indexToReplace = requestItems.findIndex((obj) => obj.name === "");
+			replaceItemWithIndex(indexToReplace, selectedItem);
+		} else {
+			// Check if an item with the same name already exists in requestItems
+			const itemExists = requestItems.some(
+				(item) => item.name === selectedItem.name
+			);
+
+			if (!itemExists) {
+				const indexToReplace = requestItems.findIndex((obj) => obj.name === "");
+				if (indexToReplace !== -1) {
+					replaceItemWithIndex(indexToReplace, selectedItem);
+				} else {
+					setRequestItems((prevRows) => [
+						...prevRows,
+						{
+							name: selectedItem.name,
+							id: selectedItem.id,
+							price: selectedItem.price,
+							quantity: 0,
+							times: 0,
+							date: "",
+						},
+					]);
+				}
+			} else {
+				console.log(
+					`Item with name ${lastSelectedItem.name} already exists in requestItems`
+				);
+			}
+		}
 	};
 
+	const [categories] = useFetchData("/stock/categories");
+	const [stores] = useFetchData("/stock/stores");
 	const handleSearch = async () => {
-		const results = await instance
-			.get(`/stock/items?store=${store}&category=${category}&item=${query}`)
+		await instance
+			.get(`/stock/items?store=${store}&category=${category}`)
 			.then((res) => {
-				console.log(res);
 				setSearchResults(res.data.data);
 			})
 			.catch((err) => {
@@ -47,22 +81,45 @@ const CreatePurchaseOrder = () => {
 	};
 	useEffect(() => {
 		handleSearch();
-	}, [query, category, store]);
+	}, [category, store]);
+	const createPurchaseOrder = async () => {
+		const submitdata = requestItems.filter((item) => item.name !== "");
+		const data = { order: submitdata };
+		const response = await postData("/stock/purchaseorder", data);
+		if (response) {
+			setRequestItems(initialRows);
+		}
+	};
 
 	return (
 		<div className="w-full">
 			<p className="text-xs font-bold text-center">Create Purchase Order</p>
 			<div className="w-full grid-flow-col gap-2 px-2 py-2 bg-white rounded-md justify-stretch">
-				<form className="grid content-center w-full grid-cols-12 gap-3 px-3 py-1 ">
-					<div className="flex items-center col-span-3 gap-1 px-3 py-1 rounded-sm bg-search-bg">
-						<MagnifyingGlassIcon className="w-5 h-5 text-login-blue" />
-						<input
-							placeholder="Search"
-							className="w-full bg-transparent focus:outline-none focus-border-none placeholder:text-sm placeholder:font-bold"
-							{...register("query")}
-						/>
-					</div>
+				<form className="grid justify-between w-full grid-flow-col grid-cols-12 px-3 py-1 ">
 					<div className="flex col-span-4 gap-2">
+						<div className="flex gap-2 text-xs justify-items-center">
+							<select
+								className="w-full text-xs"
+								onChange={(e) => {
+									const selectedIndex = e.target.selectedIndex;
+									const selectedItem = searchResults[selectedIndex - 1];
+									if (selectedItem) {
+										setSelectedItems((prevItems) => [
+											...prevItems,
+											selectedItem,
+										]);
+										updateRequestItems(selectedItem);
+									}
+								}}>
+								<option>Select item</option>
+								{searchResults &&
+									searchResults.map((item) => (
+										<option key={item.id} value={item.id}>
+											{item.name}
+										</option>
+									))}
+							</select>
+						</div>
 						<div className="flex gap-2 text-xs justify-items-center">
 							<select {...register("store")} className="w-full text-xs">
 								<option selected={true} value={""}>
@@ -70,7 +127,7 @@ const CreatePurchaseOrder = () => {
 								</option>
 								{stores &&
 									stores.map((store) => (
-										<option key={store.id} value={store.id}>
+										<option key={crypto.randomUUID()} value={store.id}>
 											{store.name}
 										</option>
 									))}
@@ -83,20 +140,14 @@ const CreatePurchaseOrder = () => {
 								</option>
 								{categories &&
 									categories.map((category) => (
-										<option key={category.id} value={category.id}>
+										<option key={crypto.randomUUID()} value={category.id}>
 											{category.name}
 										</option>
 									))}
 							</select>
 						</div>
 					</div>
-					<div className="grid content-center grid-flow-col col-span-5 gap-2 ">
-						<button
-							onClick={addItemToOrder}
-							type="button"
-							className="col-span-2 px-6 py-1 text-xs text-center rounded-sm cursor-pointer bg-login-blue text-primary-white ">
-							Add{" "}
-						</button>
+					<div className="grid content-center grid-flow-col col-span-3 gap-2 ">
 						<div className="flex items-center justify-center gap-2 text-xs">
 							<label>Done on</label>
 							<input type="date" className="block " />
@@ -115,10 +166,17 @@ const CreatePurchaseOrder = () => {
 					<p className="text-xs font-bold">Web:www.kdev.rw</p>
 					<p className="text-xs font-bold">TIN/VAT: 000000000</p>
 				</div>
-				<div>
-					<button className="flex items-center gap-1 px-2 py-1 text-xs text-slate-800 ">
+				<div className="flex items-center gap-3">
+					<button className="flex items-center gap-1 px-2 py-1 text-xs bg-black text-slate-100 ">
 						Print
 						<BsPrinter />
+					</button>
+					<button
+						onClick={createPurchaseOrder}
+						type="button"
+						className="flex items-center gap-3 px-4 py-1 text-xs bg-teal-900 text-slate-100">
+						Submit
+						<CheckIcon className="w-3 h-3 font-bold text-white" />
 					</button>
 				</div>
 			</div>
@@ -133,24 +191,7 @@ const CreatePurchaseOrder = () => {
 				setData={setRequestItems}
 				hidePrice={false}
 			/>
-			<div className="grid justify-between w-full grid-flow-col p-4 my-4 grid-col-3">
-				<div>
-					<p className="text-xs font-bold">Store Keeper</p>
-					<p className="text-xs font-bold">Signature</p>
-				</div>
-				<div>
-					<p className="text-xs font-bold">Controller</p>
-					<p className="text-xs font-bold">Signature</p>
-				</div>
-				<div>
-					<p className="text-xs font-bold">Cashier</p>
-					<p className="text-xs font-bold">Signature</p>
-				</div>
-				<div>
-					<p className="text-xs font-bold">Manager</p>
-					<p className="text-xs font-bold">Signature</p>
-				</div>
-			</div>
+			<PurchaseOrderFooter />
 		</div>
 	);
 };

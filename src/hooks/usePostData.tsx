@@ -1,26 +1,25 @@
-import { useState, useEffect } from "react";
+// usePostData.ts
+import { useState } from "react";
 import instance from "../API";
 
-export const usePostData = (url: string, data: any) => {
-	const [resData, setResData] = useState();
-	const [loading, setLoading] = useState(false);
-	const [error, setError] = useState();
+const usePostData = () => {
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const res = await instance.post(url, { data });
-				if (res.data && res.data.data) {
-					setResData(res.data.data);
-				}
-			} catch (error) {
-				setError(error);
-			} finally {
-				setLoading(false);
-			}
-		};
-		fetchData();
-	}, [url]);
+	const postData = async <T,>(url: string, data: T) => {
+		try {
+			setIsLoading(true);
+			const response = await instance.post(`${url}`, data);
+			return response.data;
+		} catch (error) {
+			setError(error.message || "An error occurred");
+			throw error;
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-	return [resData, loading, error];
+	return { postData, isLoading, error };
 };
+
+export default usePostData;

@@ -10,6 +10,8 @@ export const useFetchData = (url: string) => {
 		const fetchData = async () => {
 			try {
 				const res = await instance.get(url);
+				console.log("res", res);
+
 				if (res.data && res.data.data) {
 					setData(res.data.data);
 				}

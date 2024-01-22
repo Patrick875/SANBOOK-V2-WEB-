@@ -1,6 +1,5 @@
 import { ReactElement } from "react";
 import { Navigate } from "react-router-dom";
-import Cookie from "js-cookie";
 import { useAuth } from "../Context/AuthContext";
 
 interface privateRoutesProps {

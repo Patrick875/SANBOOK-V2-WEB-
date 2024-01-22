@@ -14,7 +14,7 @@ import "./../css/editableTable.css";
 
 interface EditableTableProps {
 	data: Array<any>;
-	setData: React.Dispatch<React.SetStateAction<any[]>>;
+	setData?: React.Dispatch<React.SetStateAction<any[]>>;
 	readOnly: boolean;
 	hidePrice: boolean;
 	type: string;
@@ -41,21 +41,22 @@ const EditableTable: React.FC<EditableTableProps> = (props) => {
 
 	const onChangeInput = (e: ChangeEvent<HTMLInputElement>, id: string) => {
 		const { name, value } = e.target;
-
-		setData((prevData) =>
-			prevData.map((item) =>
-				item.id === id && name
-					? name === "date"
-						? { ...item, [name]: new Date(value).toLocaleDateString("fr-FR") }
-						: name === "quantity" ||
-						  name === "times" ||
-						  name === "price" ||
-						  name === "unitPrice"
-						? { ...item, [name]: parseFloat(value) || 0 }
-						: { ...item, [name]: value }
-					: { ...item }
-			)
-		);
+		if (!readOnly && setData) {
+			setData((prevData) =>
+				prevData.map((item) =>
+					item.id === id && name
+						? name === "date"
+							? { ...item, [name]: new Date(value).toLocaleDateString("fr-FR") }
+							: name === "quantity" ||
+							  name === "times" ||
+							  name === "price" ||
+							  name === "unitPrice"
+							? { ...item, [name]: parseFloat(value) || 0 }
+							: { ...item, [name]: value }
+						: { ...item }
+				)
+			);
+		}
 	};
 
 	const computeOrderTotal = (items: any[]) => {
@@ -177,18 +178,8 @@ const EditableTable: React.FC<EditableTableProps> = (props) => {
 						</tr>
 					))}
 					{totalRows.map(({ id, name, total }) => (
-						<tr key={id} className="lastRows">
-							<td colSpan={cols.length}>
-								{
-									<input
-										name="name"
-										value={name}
-										type="text"
-										readOnly={readOnly}
-									/>
-								}
-							</td>
-
+						<tr key={id} className="capitalize lastRows">
+							<td colSpan={cols.length}>{name}</td>
 							<td>
 								<input
 									name="total"

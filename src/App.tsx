@@ -38,7 +38,7 @@ import StockDashboard from "./Scenes/Stock/Dashboard/StockDashboard";
 import Requests from "./Scenes/Stock/Requests/Requests";
 import Stock from "./Scenes/Stock/Stock/Stock";
 import PurchaseOrders from "./Scenes/Stock/PurchaseOrders/index";
-import ReceiveVauchers from "./Scenes/Stock/ReceiveVauchers/ReceiveVauchers";
+import ReceiveVauchers from "./Scenes/Stock/ReceiveVauchers";
 import Suppliers from "./Scenes/Stock/Suppliers/Suppliers";
 import CostingCenters from "./Scenes/Stock/CostingCenters/CostingCenters";
 import Stores from "./Scenes/Stock/Stores/Stores";
@@ -57,6 +57,10 @@ import StoreDetails from "./Scenes/Stock/Stores/StoreDetails";
 import AllPurchaseOrders from "./Scenes/Stock/PurchaseOrders/AllPurchaseOrders";
 import CreatePurchaseOrder from "./Scenes/Stock/PurchaseOrders/CreatePurchaseOrder";
 import { BackButton } from "./shared/BackButton";
+import ViewPurchaseOrder from "./Scenes/Stock/PurchaseOrders/ViewPurchaseOrder";
+import AllReceiveVauchers from "./Scenes/Stock/ReceiveVauchers/AllReceiveVauchers";
+import CreateReceiveVaucher from "./Scenes/Stock/ReceiveVauchers/CreateReceiveVaucher";
+import ViewReceiveVaucher from "./Scenes/Stock/ReceiveVauchers/ViewReceiveVaucher";
 function App() {
 	const location = useLocation();
 	return (
@@ -136,8 +140,13 @@ function App() {
 						<Route path="purchase-orders" element={<PurchaseOrders />}>
 							<Route index element={<AllPurchaseOrders />} />
 							<Route path="create" element={<CreatePurchaseOrder />} />
+							<Route path=":order" element={<ViewPurchaseOrder />} />
 						</Route>
-						<Route path="receive-vauchers" element={<ReceiveVauchers />} />
+						<Route path="receive-vauchers" element={<ReceiveVauchers />}>
+							<Route index element={<AllReceiveVauchers />} />
+							<Route path="create" element={<CreateReceiveVaucher />} />
+							<Route path=":order" element={<ViewReceiveVaucher />} />
+						</Route>
 						<Route path="suppliers" element={<Suppliers />} />
 						<Route path="costing-centers" element={<CostingCenters />} />
 						<Route path="stores" element={<StoresIndex />}>

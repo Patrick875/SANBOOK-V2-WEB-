@@ -1,4 +1,3 @@
-import React from "react";
 import { BackButton } from "../../shared/BackButton";
 import { useForm } from "react-hook-form";
 import { useFetchData } from "../../hooks/useFetchData";

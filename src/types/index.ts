@@ -112,3 +112,69 @@ export interface error {
     status: boolean;
     message: string;
 }
+
+export interface purchaseOrder {
+    date: string;
+    firstapproval: boolean | null;
+    id: number;
+    purchaseOrderId: string;
+    secondapproval: boolean | null;
+    status: string;
+    thirdapproval: string | null;
+    total: number;
+    userId: number | null;
+}
+
+interface Item {
+    id: number;
+    name: string;
+    category: number;
+    store: number;
+    mainunit: number;
+    price: number;
+    createdBy: any; // You can replace 'any' with the actual type of 'createdBy'
+}
+
+interface StockPurchaseOrderDetail {
+    id: number;
+    ItemId: number;
+    currentQuantity: number;
+    requestQuantity: number;
+    unitPrice: number;
+    unit: any; // You can replace 'any' with the actual type of 'unit'
+    Item: Item;
+}
+
+interface StockPurchaseOrder {
+    id: number;
+    date: string;
+    status: string | null;
+    firstapproval: any; // You can replace 'any' with the actual type of 'firstapproval'
+    secondapproval: any; // You can replace 'any' with the actual type of 'secondapproval'
+    thirdapproval: any; // You can replace 'any' with the actual type of 'thirdapproval'
+    userId: any; // You can replace 'any' with the actual type of 'userId'
+    total: number;
+    purchaseOrderId: string;
+    StockPurchaseOrderDetails: StockPurchaseOrderDetail[];
+}
+
+interface ReceiveVoucherDetail {
+    id: number;
+    item: number;
+    receiveVoucherId: number;
+    receivedQuantity: number;
+    unitPrice: number;
+    Item: Item;
+}
+
+export interface receiveVoucher {
+    id: number;
+    date: string;
+    status: string | null;
+    total: number;
+    receiveVoucherId: number | null;
+    approvals: any; // You can replace 'any' with the actual type of 'approvals'
+    StockPurchaseOrder: StockPurchaseOrder;
+    ReceiveVoucherDetails: ReceiveVoucherDetail[];
+}
+

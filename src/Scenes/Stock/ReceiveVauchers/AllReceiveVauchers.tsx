@@ -2,16 +2,16 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
-import { RiEditBoxLine } from "react-icons/ri";
-import { purchaseOrder } from "../../../types";
 import PDFButton from "../../../shared/PDFButton";
+import { RiEditBoxLine } from "react-icons/ri";
+import { receiveVoucher } from "../../../types";
 import TableHead from "../Common/TableHead";
 
-interface purchaseOrderListProps {
-	item: purchaseOrder;
+interface receiveVoucherListProps {
+	item: receiveVoucher;
 }
 
-const PurchaseOrderListItem = ({ item }: purchaseOrderListProps) => {
+const ReceiveVoucherListItem = ({ item }: receiveVoucherListProps) => {
 	return (
 		<div className="grid w-full grid-cols-12 text-xs">
 			<div className="col-span-3 p-3 py-2 text-xs tracking-wide text-left whitespace-nowrap">
@@ -21,13 +21,12 @@ const PurchaseOrderListItem = ({ item }: purchaseOrderListProps) => {
 				<p className="py-1">
 					{new Date(item.date).toLocaleDateString("fr-FR")}
 				</p>
-				<p className="py-1">{item.purchaseOrderId}</p>
+				<p className="py-1">{item?.receiveVoucherId}</p>
 			</div>
 			<div className="col-span-3 p-3 py-2 text-xs tracking-wide text-left whitespace-nowrap">
 				{item?.userId}
 			</div>
 			<div className="col-span-3 p-3 py-2 text-xs tracking-wide text-left whitespace-nowrap">
-				<p className="font-bold text-right lowercase">{item.status}</p>
 				<div className="flex items-center justify-between w-full">
 					<p className="font-bold">{Number(item.total).toLocaleString()}</p>
 					<Link
@@ -42,9 +41,10 @@ const PurchaseOrderListItem = ({ item }: purchaseOrderListProps) => {
 	);
 };
 
-function AllPurchaseOrders() {
+function AllReceiveVauchers() {
 	const { register } = useForm();
-	const [data, loading] = useFetchData("/stock/purchaseorder");
+	const [data, loading] = useFetchData("/stock/receivevaucher");
+	console.log("data-rce-rec", data);
 
 	return (
 		<div className="w-full">
@@ -79,17 +79,17 @@ function AllPurchaseOrders() {
 					</Link>
 				</div>
 			</div>
+
 			<div className="w-full mt-3 bg-primary-white ">
 				<TableHead />
 				{loading && <p className="my-4">Loading ....</p>}
-
 				{data &&
-					data.map((item: purchaseOrder) => (
-						<PurchaseOrderListItem item={item} key={item.id} />
+					data.map((item: receiveVoucher) => (
+						<ReceiveVoucherListItem item={item} key={item.id} />
 					))}
 			</div>
 		</div>
 	);
 }
 
-export default AllPurchaseOrders;
+export default AllReceiveVauchers;
