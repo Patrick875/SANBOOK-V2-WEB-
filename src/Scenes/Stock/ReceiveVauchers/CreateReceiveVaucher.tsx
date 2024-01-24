@@ -15,6 +15,7 @@ function CreateReceiveVaucher() {
 	const [purchaseOrders, setPurchaseOrders] = useState([]);
 	let [rowsReceive, setRowsReceive] = useState();
 	let [rowsPurchase, setRowsPurchase] = useState();
+	const [createdId, setCreatedId] = useState<string | null>(null);
 	const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState();
 	const onChangeInput = (e, id, dataSet, doc) => {
 		const { name, value } = e.target;
@@ -89,7 +90,7 @@ function CreateReceiveVaucher() {
 				},
 			})
 			.then((res) => {
-				console.log("res", res);
+				setCreatedId(res.data.voucherId);
 			})
 			.catch((err) => {
 				console.log("err", err);
@@ -152,215 +153,211 @@ function CreateReceiveVaucher() {
 			</div>
 			<DocumentHeader />
 			<p className="w-full text-xs font-bold text-center uppercase">
-				Receive Vaucher
+				Receive Vaucher {createdId}
 			</p>
 			{selectedPurchaseOrder && (
 				<div>
-					<div>
-						<div className="flex">
-							<div>
-								<p className="my-2 text-xs font-bold">Purchase order</p>
-								<div className="editableTable">
-									<table>
-										<thead>
-											<tr>
-												{headers.map((header) => (
-													<th key={header}>{header}</th>
-												))}
-											</tr>
-										</thead>
-										<tbody>
-											{rowsPurchase.map((item) => (
-												<tr key={item.id}>
-													<td key="name">
-														<input
-															name="name"
-															value={item.Item["name"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsPurchase, "purc")
-															}
-															placeholder=""
-														/>
-													</td>
-													<td key="price">
-														<input
-															name="unitPrice"
-															value={item["unitPrice"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsPurchase, "purc")
-															}
-															placeholder=""
-														/>
-													</td>
-													<td key="quantity">
-														<input
-															name="requestQuantity"
-															value={item["requestQuantity"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsPurchase, "purc")
-															}
-															placeholder=""
-														/>
-													</td>
-													<td key="unit">
-														<input
-															name="unit"
-															value={item["unit"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsPurchase, "purc")
-															}
-															placeholder=""
-														/>
-													</td>
-
-													<td>
-														<input
-															name="total"
-															type="text"
-															className="text-xs"
-															value={Number(
-																item.unitPrice * item.requestQuantity
-															).toLocaleString()}
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsPurchase, "purc")
-															}
-															placeholder=""
-															readOnly={false}
-														/>
-													</td>
-												</tr>
+					<div className="flex">
+						<div>
+							<p className="my-2 text-xs font-bold">Purchase order</p>
+							<div className="editableTable">
+								<table>
+									<thead>
+										<tr>
+											{headers.map((header) => (
+												<th key={header}>{header}</th>
 											))}
-											<tr className="text-xs font-bold">
-												<td colSpan={headers.length - 1}>Total</td>
+										</tr>
+									</thead>
+									<tbody>
+										{rowsPurchase.map((item) => (
+											<tr key={item.id}>
+												<td key="name">
+													<input
+														name="name"
+														value={item.Item["name"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsPurchase, "purc")
+														}
+														placeholder=""
+													/>
+												</td>
+												<td key="price">
+													<input
+														name="unitPrice"
+														value={item["unitPrice"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsPurchase, "purc")
+														}
+														placeholder=""
+													/>
+												</td>
+												<td key="quantity">
+													<input
+														name="requestQuantity"
+														value={item["requestQuantity"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsPurchase, "purc")
+														}
+														placeholder=""
+													/>
+												</td>
+												<td key="unit">
+													<input
+														name="unit"
+														value={item["unit"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsPurchase, "purc")
+														}
+														placeholder=""
+													/>
+												</td>
+
 												<td>
-													{rowsPurchase
-														.reduce((accumulator, item) => {
-															const prod =
-																item.unitPrice * item.requestQuantity;
-															return prod + accumulator;
-														}, 0)
-														.toLocaleString()}
+													<input
+														name="total"
+														type="text"
+														className="text-xs"
+														value={Number(
+															item.unitPrice * item.requestQuantity
+														).toLocaleString()}
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsPurchase, "purc")
+														}
+														placeholder=""
+														readOnly={false}
+													/>
 												</td>
 											</tr>
-											<tr>
-												<td className="text-xs font-bold">Balance</td>
-												<td colSpan={headers.length - 1} />
-											</tr>
-										</tbody>
-									</table>
-								</div>
+										))}
+										<tr className="text-xs font-bold">
+											<td colSpan={headers.length - 1}>Total</td>
+											<td>
+												{rowsPurchase
+													.reduce((accumulator, item) => {
+														const prod = item.unitPrice * item.requestQuantity;
+														return prod + accumulator;
+													}, 0)
+													.toLocaleString()}
+											</td>
+										</tr>
+										<tr>
+											<td className="text-xs font-bold">Balance</td>
+											<td colSpan={headers.length - 1} />
+										</tr>
+									</tbody>
+								</table>
 							</div>
-							<div>
-								<p className="my-2 text-xs font-bold">Receive vaucher</p>
-								<div className="editableTable">
-									<table>
-										<thead>
-											<tr>
-												{headers.map((header) => (
-													<th key={header}>{header}</th>
-												))}
-											</tr>
-										</thead>
-										<tbody>
-											{[...rowsReceive].map((item) => (
-												<tr key={item.id}>
-													<td key="name">
-														<input
-															name="name"
-															value={item.Item["name"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsReceive, "rec")
-															}
-															placeholder=""
-														/>
-													</td>
-													<td key="price">
-														<input
-															name="unitPrice"
-															value={item["unitPrice"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsReceive, "rec")
-															}
-															placeholder=""
-														/>
-													</td>
-													<td key="quantity">
-														<input
-															name="requestQuantity"
-															value={item["requestQuantity"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsReceive, "rec")
-															}
-															placeholder=""
-														/>
-													</td>
-													<td key="unit">
-														<input
-															name="unit"
-															value={item["unit"]}
-															readOnly={false}
-															type="text"
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsReceive, "rec")
-															}
-															placeholder=""
-														/>
-													</td>
-
-													<td>
-														<input
-															name="total"
-															type="text"
-															className="text-xs"
-															value={Number(
-																item.unitPrice * item.requestQuantity
-															).toLocaleString()}
-															onChange={(e) =>
-																onChangeInput(e, item.id, rowsReceive, "rec")
-															}
-															placeholder=""
-															readOnly={false}
-														/>
-													</td>
-												</tr>
+						</div>
+						<div>
+							<p className="my-2 text-xs font-bold">Receive vaucher</p>
+							<div className="editableTable">
+								<table>
+									<thead>
+										<tr>
+											{headers.map((header) => (
+												<th key={header}>{header}</th>
 											))}
-											<tr className="text-xs font-bold">
-												<td className="text-xs" colSpan={headers.length - 1}>
-													Total
+										</tr>
+									</thead>
+									<tbody>
+										{[...rowsReceive].map((item) => (
+											<tr key={item.id}>
+												<td key="name">
+													<input
+														name="name"
+														value={item.Item["name"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsReceive, "rec")
+														}
+														placeholder=""
+													/>
 												</td>
-												<td className="text-xs">
-													{rowsReceive
-														.reduce((accumulator, item) => {
-															const prod =
-																item.unitPrice * item.requestQuantity;
-															return prod + accumulator;
-														}, 0)
-														.toLocaleString()}
+												<td key="price">
+													<input
+														name="unitPrice"
+														value={item["unitPrice"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsReceive, "rec")
+														}
+														placeholder=""
+													/>
+												</td>
+												<td key="quantity">
+													<input
+														name="requestQuantity"
+														value={item["requestQuantity"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsReceive, "rec")
+														}
+														placeholder=""
+													/>
+												</td>
+												<td key="unit">
+													<input
+														name="unit"
+														value={item["unit"]}
+														readOnly={false}
+														type="text"
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsReceive, "rec")
+														}
+														placeholder=""
+													/>
+												</td>
+
+												<td>
+													<input
+														name="total"
+														type="text"
+														className="text-xs"
+														value={Number(
+															item.unitPrice * item.requestQuantity
+														).toLocaleString()}
+														onChange={(e) =>
+															onChangeInput(e, item.id, rowsReceive, "rec")
+														}
+														placeholder=""
+														readOnly={false}
+													/>
 												</td>
 											</tr>
-											<tr>
-												<td colSpan={headers.length - 1} />
-												<td className="text-xs font-bold">
-													{balance.toLocaleString()}
-												</td>
-											</tr>
-										</tbody>
-									</table>
-								</div>
+										))}
+										<tr className="text-xs font-bold">
+											<td className="text-xs" colSpan={headers.length - 1}>
+												Total
+											</td>
+											<td className="text-xs">
+												{rowsReceive
+													.reduce((accumulator, item) => {
+														const prod = item.unitPrice * item.requestQuantity;
+														return prod + accumulator;
+													}, 0)
+													.toLocaleString()}
+											</td>
+										</tr>
+										<tr>
+											<td colSpan={headers.length - 1} />
+											<td className="text-xs font-bold">
+												{balance.toLocaleString()}
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						</div>
 					</div>

@@ -5,11 +5,10 @@ import EditableTable from "../../../shared/EditableTable";
 import { initialRows } from "../../../types/constants";
 import { useEffect, useState } from "react";
 import { purcPlaceholder } from "../../../types";
-import { Logo } from "../../../shared/Logo";
-import { BsPrinter } from "react-icons/bs";
 import instance from "../../../API";
 import usePostData from "../../../hooks/usePostData";
 import PurchaseOrderFooter from "../PurchaseOrderFooter";
+import DocumentHeader from "../../../shared/DocumentHeader";
 
 const CreatePurchaseOrder = () => {
 	const { postData, isLoading } = usePostData();
@@ -155,22 +154,8 @@ const CreatePurchaseOrder = () => {
 					</div>
 				</form>
 			</div>
-			<div className="grid justify-between w-full grid-flow-col p-4 my-4 grid-col-3">
-				<Logo textColor="bg-transparent" />
-				<div>
-					<p className="text-xs font-bold">K_DEV HOTEL</p>
-					<p className="text-xs font-bold">
-						TEL: +250 780 000 000/ +250 780 000 000
-					</p>
-					<p className="text-xs font-bold">E-mail:kdevhotel@kdev.rw</p>
-					<p className="text-xs font-bold">Web:www.kdev.rw</p>
-					<p className="text-xs font-bold">TIN/VAT: 000000000</p>
-				</div>
+			<DocumentHeader>
 				<div className="flex items-center gap-3">
-					<button className="flex items-center gap-1 px-2 py-1 text-xs bg-black text-slate-100 ">
-						Print
-						<BsPrinter />
-					</button>
 					<button
 						onClick={createPurchaseOrder}
 						type="button"
@@ -179,7 +164,7 @@ const CreatePurchaseOrder = () => {
 						<CheckIcon className="w-3 h-3 font-bold text-white" />
 					</button>
 				</div>
-			</div>
+			</DocumentHeader>
 			<EditableTable
 				cols={["name", "price", "quantity", "unit"]}
 				totals={["total"]}

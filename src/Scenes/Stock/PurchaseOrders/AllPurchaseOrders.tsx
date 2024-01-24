@@ -6,6 +6,8 @@ import { RiEditBoxLine } from "react-icons/ri";
 import { purchaseOrder } from "../../../types";
 import PDFButton from "../../../shared/PDFButton";
 import TableHead from "../Common/TableHead";
+import { useState } from "react";
+import Pages from "../../../shared/Pages";
 
 interface purchaseOrderListProps {
 	item: purchaseOrder;
@@ -45,6 +47,15 @@ const PurchaseOrderListItem = ({ item }: purchaseOrderListProps) => {
 function AllPurchaseOrders() {
 	const { register } = useForm();
 	const [data, loading] = useFetchData("/stock/purchaseorder");
+	const itemsPerPage = 5;
+	const [pageNumber, setPageNumber] = useState<number>(0);
+	const pagesVisited = pageNumber * itemsPerPage;
+
+	const displayItems =
+		data &&
+		data.slice(pagesVisited, pagesVisited + itemsPerPage).map((el) => {
+			return <PurchaseOrderListItem item={el} key={el.id} />;
+		});
 
 	return (
 		<div className="w-full">
@@ -83,10 +94,16 @@ function AllPurchaseOrders() {
 				<TableHead />
 				{loading && <p className="my-4">Loading ....</p>}
 
-				{data &&
-					data.map((item: purchaseOrder) => (
-						<PurchaseOrderListItem item={item} key={item.id} />
-					))}
+				{data && (
+					<div>
+						{displayItems}
+						<Pages
+							dataLength={data.length}
+							setPageNumber={setPageNumber}
+							itemsPerPage={itemsPerPage}
+						/>
+					</div>
+				)}
 			</div>
 		</div>
 	);

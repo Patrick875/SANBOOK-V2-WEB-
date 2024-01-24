@@ -36,7 +36,7 @@ import ContractViewLayout from "./Scenes/HR/ContractViewLayout ";
 import StockPage from "./Scenes/Stock";
 import StockDashboard from "./Scenes/Stock/Dashboard/StockDashboard";
 import Requests from "./Scenes/Stock/Requests/Requests";
-import Stock from "./Scenes/Stock/Stock/Stock";
+import Stock from "./Scenes/Stock/Stock";
 import PurchaseOrders from "./Scenes/Stock/PurchaseOrders/index";
 import ReceiveVauchers from "./Scenes/Stock/ReceiveVauchers";
 import Suppliers from "./Scenes/Stock/Suppliers/Suppliers";

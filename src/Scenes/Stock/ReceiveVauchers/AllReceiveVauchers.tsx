@@ -6,6 +6,8 @@ import PDFButton from "../../../shared/PDFButton";
 import { RiEditBoxLine } from "react-icons/ri";
 import { receiveVoucher } from "../../../types";
 import TableHead from "../Common/TableHead";
+import Pages from "../../../shared/Pages";
+import { useState } from "react";
 
 interface receiveVoucherListProps {
 	item: receiveVoucher;
@@ -44,7 +46,15 @@ const ReceiveVoucherListItem = ({ item }: receiveVoucherListProps) => {
 function AllReceiveVauchers() {
 	const { register } = useForm();
 	const [data, loading] = useFetchData("/stock/receivevaucher");
-	console.log("data-rce-rec", data);
+	const itemsPerPage = 5;
+	const [pageNumber, setPageNumber] = useState<number>(0);
+	const pagesVisited = pageNumber * itemsPerPage;
+
+	const displayItems =
+		data &&
+		data.slice(pagesVisited, pagesVisited + itemsPerPage).map((el) => {
+			return <ReceiveVoucherListItem item={el} key={el.id} />;
+		});
 
 	return (
 		<div className="w-full">
@@ -83,10 +93,17 @@ function AllReceiveVauchers() {
 			<div className="w-full mt-3 bg-primary-white ">
 				<TableHead />
 				{loading && <p className="my-4">Loading ....</p>}
-				{data &&
-					data.map((item: receiveVoucher) => (
-						<ReceiveVoucherListItem item={item} key={item.id} />
-					))}
+				{data && (
+					<div>
+						{displayItems}
+
+						<Pages
+							dataLength={data.length}
+							setPageNumber={setPageNumber}
+							itemsPerPage={itemsPerPage}
+						/>
+					</div>
+				)}
 			</div>
 		</div>
 	);
