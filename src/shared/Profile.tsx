@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { authUser, employeeRequest } from "../types";
-import { authUserSelector } from "./userSlice";
+import { authUserSelector } from "../Redux/userSlice";
 import instance from "../API";
 
 interface userDetails {

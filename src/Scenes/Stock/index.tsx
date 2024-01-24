@@ -83,9 +83,9 @@ const navlinks: navitem[] = [
 
 const StockPage = () => {
 	return (
-		<div className="grid grid-cols-8 w-100 font-nunito">
+		<div className="flex w-100 font-nunito">
 			<SideBarNav navlinks={navlinks} backgroundColor="bg-stock-side" />
-			<div className="col-span-6 bg-tab-content">
+			<div className="flex-1 bg-tab-content">
 				<TopBar />
 				<div className="px-6 py-1 ">
 					<Outlet />

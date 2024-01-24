@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "../../Context/AuthContext";
 import { HashLoader } from "react-spinners";
 import { useAppDispatch } from "../../hooks/reduxHooks";
-import { loginAuthUser } from "../../shared/userSlice";
+import { loginAuthUser } from "../../Redux/userSlice";
 import { error } from "../../types";
 
 interface loginData {

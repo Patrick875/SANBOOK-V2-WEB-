@@ -43,12 +43,12 @@ const TopNavDropdown = () => {
 			onClick={() => {
 				setProfileOn(!profileOn);
 			}}>
-			<div className="flex items-center gap-2 px-4 py-1 bg-white rounded-full ">
+			<div className="flex items-center justify-between px-4 py-1 bg-white rounded-full ">
 				<div className="flex items-center justify-center w-6 h-6 text-white rounded-full bg-login-blue">
 					<UserProfileIcon />
 				</div>
 				<div>
-					<p className="text-sm font-medium capitalize">
+					<p className="text-xs font-bold capitalize">
 						{user && user.username}
 					</p>
 					<p className="text-xs ">{user && user.role}</p>

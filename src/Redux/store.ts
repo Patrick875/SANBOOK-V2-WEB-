@@ -1,10 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import createContractReducer from './../Scenes/HR/contractSlice'
-import authUserReducer from './../shared/userSlice'
+import authUserReducer from './userSlice'
+import sideBarSlice from "./sideBarSlice";
 export const store = configureStore({
     reducer: {
         createContractDetails: createContractReducer,
-        authUser: authUserReducer
+        authUser: authUserReducer,
+        sideBarSize: sideBarSlice,
     }
 })
 export type AppDispatch = typeof store.dispatch;
