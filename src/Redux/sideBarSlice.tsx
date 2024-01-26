@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
 interface fullSidebar {
@@ -16,10 +16,13 @@ export const sideBarSlice = createSlice({
 		toggleSideBar: (state) => {
 			state.isFull = !state.isFull;
 		},
+		collapseSideBar: (state) => {
+			state.isFull = false;
+		},
 	},
 });
 
-export const { toggleSideBar } = sideBarSlice.actions;
+export const { toggleSideBar, collapseSideBar } = sideBarSlice.actions;
 export const sideBarSizeSelector = (state: RootState) =>
 	state.sideBarSize.isFull;
 export default sideBarSlice.reducer;

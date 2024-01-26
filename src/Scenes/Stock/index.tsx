@@ -11,6 +11,8 @@ import { MdOutlineCategory, MdDeliveryDining } from "react-icons/md";
 
 import { navitem } from "../../types";
 import TopBar from "../../shared/TopBar";
+import LayoutContainer from "../../shared/LayoutContainer";
+import OutletContainer from "../../shared/OutletContainer";
 
 const navlinks: navitem[] = [
 	{
@@ -83,15 +85,15 @@ const navlinks: navitem[] = [
 
 const StockPage = () => {
 	return (
-		<div className="flex w-100 font-nunito">
+		<LayoutContainer>
 			<SideBarNav navlinks={navlinks} backgroundColor="bg-stock-side" />
-			<div className="flex-1 bg-tab-content">
+			<OutletContainer>
 				<TopBar />
 				<div className="px-6 py-1 ">
 					<Outlet />
 				</div>
-			</div>
-		</div>
+			</OutletContainer>
+		</LayoutContainer>
 	);
 };
 

@@ -1,4 +1,5 @@
 //jshint esversion:9
+import { Toaster } from "react-hot-toast";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Login } from "./Scenes/Login";
 import { ResetPassword } from "./Scenes/ResetPassword";
@@ -39,7 +40,7 @@ import Requests from "./Scenes/Stock/Requests/Requests";
 import Stock from "./Scenes/Stock/Stock";
 import PurchaseOrders from "./Scenes/Stock/PurchaseOrders/index";
 import ReceiveVauchers from "./Scenes/Stock/ReceiveVauchers";
-import Suppliers from "./Scenes/Stock/Suppliers/Suppliers";
+import Suppliers from "./Scenes/Stock/Suppliers";
 import CostingCenters from "./Scenes/Stock/CostingCenters/CostingCenters";
 import Stores from "./Scenes/Stock/Stores/Stores";
 import StockItems from "./Scenes/Stock/Item/StockItems";
@@ -61,11 +62,15 @@ import ViewPurchaseOrder from "./Scenes/Stock/PurchaseOrders/ViewPurchaseOrder";
 import AllReceiveVauchers from "./Scenes/Stock/ReceiveVauchers/AllReceiveVauchers";
 import CreateReceiveVaucher from "./Scenes/Stock/ReceiveVauchers/CreateReceiveVaucher";
 import ViewReceiveVaucher from "./Scenes/Stock/ReceiveVauchers/ViewReceiveVaucher";
+import CreateSupplier from "./Scenes/Stock/Suppliers/CreateSupplier";
+import AllSuppliers from "./Scenes/Stock/Suppliers/AllSuppliers";
+import SupplierDetails from "./Scenes/Stock/Suppliers/SupplierDetails";
 function App() {
 	const location = useLocation();
 	return (
 		<>
 			<AnimatePresence>
+				<Toaster position="top-center" duration={4000} />
 				<Routes location={location} key={location.pathname}>
 					<Route path="/" element={<LoginResetLayout />}>
 						<Route index element={<Login />} />
@@ -147,7 +152,11 @@ function App() {
 							<Route path="create" element={<CreateReceiveVaucher />} />
 							<Route path=":order" element={<ViewReceiveVaucher />} />
 						</Route>
-						<Route path="suppliers" element={<Suppliers />} />
+						<Route path="suppliers" element={<Suppliers />}>
+							<Route index element={<AllSuppliers />} />
+							<Route path="create" element={<CreateSupplier />} />
+							<Route path=":supplier" element={<SupplierDetails />} />
+						</Route>
 						<Route path="costing-centers" element={<CostingCenters />} />
 						<Route path="stores" element={<StoresIndex />}>
 							<Route index element={<Stores />} />

@@ -1,21 +1,11 @@
 import React, { ChangeEvent } from "react";
 import "./../css/editableTable.css";
 
-// interface Props {
-// 	data: any;
-// 	setData: (data: any) => void;
-// 	readOnly: boolean;
-// 	hidePrice: boolean;
-// 	type: string;
-// 	columns: string[];
-// 	totals?: string[];
-// 	totalRows?: string[];
-// }
-
 interface EditableTableProps {
 	data: Array<any>;
 	setData?: React.Dispatch<React.SetStateAction<any[]>>;
 	readOnly: boolean;
+	readOnlyCols?: string[];
 	hidePrice: boolean;
 	type: string;
 	headers: string[];
@@ -35,6 +25,7 @@ const EditableTable: React.FC<EditableTableProps> = (props) => {
 		cols,
 		totals,
 		subtotalCols,
+		readOnlyCols,
 	} = props;
 
 	const priceHidden = hidePrice || false;
@@ -149,7 +140,9 @@ const EditableTable: React.FC<EditableTableProps> = (props) => {
 									<input
 										name={col}
 										value={item[col] === 0 ? "" : item[col]}
-										readOnly={readOnly}
+										readOnly={
+											readOnlyCols ? readOnlyCols.includes(col) : readOnly
+										}
 										type="text"
 										onChange={(e) => onChangeInput(e, item.id)}
 										placeholder=""

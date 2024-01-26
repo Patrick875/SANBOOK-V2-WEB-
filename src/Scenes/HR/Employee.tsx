@@ -8,7 +8,6 @@ export const Employee = () => {
 	const activeStyles: string = "border-b-2 border-b-teal-900";
 	const id: number = Number(paths[3]);
 	const [employee] = useFetchData(`/hr/employees/${id}`);
-	console.log("employee", employee);
 
 	return (
 		<div className="w-full px-4">

@@ -178,3 +178,12 @@ export interface receiveVoucher {
     ReceiveVoucherDetails: ReceiveVoucherDetail[];
 }
 
+export interface img {
+    data: string;
+    url: string;
+}
+
+export interface identity {
+    name: string;
+    id: number;
+}

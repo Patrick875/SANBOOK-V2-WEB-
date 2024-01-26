@@ -16,7 +16,6 @@ interface SideBarNavProps {
 export const SideBarNav = ({ navlinks, backgroundColor }: SideBarNavProps) => {
 	const isFull = useSelector(sideBarSizeSelector);
 	const dispatch = useDispatch();
-	console.log("is size", isFull);
 
 	return (
 		<motion.aside

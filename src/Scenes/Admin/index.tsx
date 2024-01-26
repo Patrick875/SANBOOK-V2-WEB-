@@ -7,6 +7,8 @@ import { navitem } from "../../types";
 import { HomeIcons } from "../../assets/HomeIcon";
 import { UsersIcons } from "../../assets/UserIcon";
 import TopBar from "../../shared/TopBar";
+import LayoutContainer from "../../shared/LayoutContainer";
+import OutletContainer from "../../shared/OutletContainer";
 
 const navlinks: navitem[] = [
 	{
@@ -35,14 +37,14 @@ export const AdminDashboard = () => {
 	return !isAuth || !user === null ? (
 		<Navigate to="/" />
 	) : (
-		<div className="grid grid-cols-8 w-100 font-nunito">
+		<LayoutContainer>
 			<SideBarNav navlinks={navlinks} backgroundColor="bg-login-blue" />
-			<div className="col-span-6 ">
+			<OutletContainer>
 				<TopBar />
 				<div className="px-6 py-1">
 					<Outlet />
 				</div>
-			</div>
-		</div>
+			</OutletContainer>
+		</LayoutContainer>
 	);
 };

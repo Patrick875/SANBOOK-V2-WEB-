@@ -5,22 +5,20 @@ export const useFetchData = (url: string) => {
 	const [data, setData] = useState();
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
-
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const res = await instance.get(url);
-				console.log("res", res);
-
-				if (res.data && res.data.data) {
-					setData(res.data.data);
-				}
-			} catch (error) {
-				setError(error);
-			} finally {
-				setLoading(false);
+	const fetchData = async () => {
+		try {
+			const res = await instance.get(url);
+			if (res.data && res.data.data) {
+				setData(res.data.data);
+				return res.data.data;
 			}
-		};
+		} catch (error) {
+			setError(error);
+		} finally {
+			setLoading(false);
+		}
+	};
+	useEffect(() => {
 		fetchData();
 	}, [url]);
 

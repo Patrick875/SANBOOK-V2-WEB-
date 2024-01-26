@@ -8,11 +8,8 @@ import TableHeader from "./TableHeader";
 import { useFetchPaginatedData } from "../../../hooks/useFetchPaginatedData";
 import Pages from "../../../shared/Pages";
 import { useEffect, useState } from "react";
+import { identity } from "../../../types";
 
-interface identity {
-	name: string;
-	id: number;
-}
 interface store extends identity {
 	active: boolean;
 	selling: boolean;
@@ -63,10 +60,7 @@ const Stock = () => {
 		`/stock/currentstock?category=${category}&store=${store}`
 	);
 	const [pageNumber, setPageNumber] = useState<number>(0);
-	const [itemsPerPage, setItemsPerPage] = useState<number>(8);
-
-	console.log("items", items);
-
+	const [itemsPerPage, setItemsPerPage] = useState<number>(30);
 	useEffect(() => {
 		fetchData(`/stock/currentstock?category=${category}&store=${store}`);
 	}, [category, store]);

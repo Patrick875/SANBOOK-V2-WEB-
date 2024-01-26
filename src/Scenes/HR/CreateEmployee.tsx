@@ -1,33 +1,40 @@
 import { BackButton } from "../../shared/BackButton";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useFetchData } from "../../hooks/useFetchData";
 import { CheckIcon } from "@heroicons/react/24/outline";
-import instance from "../../API";
+import usePostData from "../../hooks/usePostData";
+import { useState } from "react";
+import { img } from "../../types";
+import { fileToDataURL } from "../../types/constants";
 
 interface Props {}
 
 export const CreateEmployee = (props: Props) => {
 	const [deps] = useFetchData("/hr/departments");
 	const [positions] = useFetchData("/hr/positions");
-	const { register, handleSubmit, reset } = useForm();
-	const createEmployee = async (data) => {
-		console.log({ data });
+	const { postData } = usePostData();
+	const { register, handleSubmit, reset, control } = useForm();
+	const [images, setImages] = useState<img[]>([]);
+	const handleFileChange = async (e) => {
+		const files = e.target.files;
+		const imagesArray: img[] = await Promise.all(
+			Array.from(files).map(async (file) => {
+				const dataUrl: string = await fileToDataURL(file);
+				return {
+					url: URL.createObjectURL(file),
+					data: dataUrl,
+				};
+			})
+		);
 
-		await instance
-			.post("/hr/employees", {
-				...data,
-				birthdate: new Date(data.birthdate).toLocaleDateString(),
-			})
-			.then((res) => {
-				console.log(res);
-				reset();
-			})
-			.catch((err) => {
-				console.log(err);
-			})
-			.finally(() => {
-				console.log("submitted");
-			});
+		setImages([...imagesArray]);
+	};
+	const createEmployee = async (data) => {
+		await postData("/hr/employees", {
+			...data,
+			profileImage: images[0].data,
+			birthdate: new Date(data.birthdate).toLocaleDateString(),
+		});
 	};
 	return (
 		<div>
@@ -183,8 +190,59 @@ export const CreateEmployee = (props: Props) => {
 						</div>
 					</div>
 				</div>
-				<div className="w-full col-span-3 p-4 ">
-					<p className="font-medium capitalize cols-span-2">Employement Data</p>
+				<div className="w-full col-span-3 p-4 bg-white">
+					<div className="w-full p-4 text-xs  rounded-[4px]">
+						<p className="my-2 font-bold">Employee Image</p>
+						<div className="flex gap-2">
+							{images.length !== 0 && (
+								<div className="grid grid-cols-3 gap-2 ">
+									{images.map((image, index) => (
+										<img
+											key={index}
+											src={image.url}
+											alt={`Uploaded Image ${index}`}
+											className="cursor-pointer"
+											style={{
+												maxWidth: "100px",
+												maxHeight: "100px",
+												margin: "5px",
+											}}
+										/>
+									))}
+								</div>
+							)}
+
+							<div className="flex-shrink-0 ms-2">
+								<Controller
+									name="profileImage"
+									control={control}
+									defaultValue={null}
+									render={({ field }) => (
+										<input
+											type="file"
+											id="profileImage"
+											accept="image/*"
+											onChange={(e) => {
+												field.onChange(e);
+												handleFileChange(e);
+											}}
+											multiple
+											style={{ display: "none" }}
+										/>
+									)}
+								/>
+								<label
+									htmlFor="profileImage"
+									className="flex items-center justify-center p-6 text-2xl bg-gray-300 rounded-md text-sky-800"
+									style={{ cursor: "pointer" }}>
+									+
+								</label>
+							</div>
+						</div>
+					</div>
+					<p className="font-medium capitalize cols-span-2 text-xsm">
+						Employement Data
+					</p>
 
 					<div className="w-full">
 						<label className="block py-2 text-xs font-medium">Department</label>

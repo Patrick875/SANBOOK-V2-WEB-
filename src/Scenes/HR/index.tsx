@@ -12,6 +12,8 @@ import { LiaFileContractSolid } from "react-icons/lia";
 import { FcMoneyTransfer, FcDepartment } from "react-icons/fc";
 import { IoIdCardOutline } from "react-icons/io5";
 import LogoutIcon from "../../assets/LogoutIcon";
+import LayoutContainer from "../../shared/LayoutContainer";
+import OutletContainer from "../../shared/OutletContainer";
 
 interface dropdownItem {
 	icon?: ReactNode;
@@ -49,12 +51,12 @@ const TopNavDropdown = () => {
 			onClick={() => {
 				setProfileOn(!profileOn);
 			}}>
-			<div className="flex items-center gap-2 px-4 py-1 bg-white rounded-full ">
+			<div className="flex items-center justify-between px-4 py-1 bg-white rounded-full ">
 				<div className="flex items-center justify-center w-6 h-6 text-white rounded-full bg-login-blue">
 					<UserProfileIcon />
 				</div>
 				<div>
-					<p className="text-sm font-medium capitalize">
+					<p className="text-xs font-bold capitalize">
 						{user && user.username}
 					</p>
 					<p className="text-xs ">{user && user.role}</p>
@@ -130,9 +132,9 @@ export const HRDashboard = () => {
 	return !isAuth || !user === null ? (
 		<Navigate to="/" />
 	) : (
-		<div className="grid grid-cols-8 w-100 font-nunito bg-[#F5F5F5]">
+		<LayoutContainer>
 			<SideBarNav navlinks={navlinks} backgroundColor="bg-hr-side" />
-			<div className="col-span-6 ">
+			<OutletContainer>
 				<div className="flex justify-between px-6 py-3 text-black bg-top-bar ">
 					<p className="text-sm font-bold">Human Resources</p>
 					<TopNavDropdown />
@@ -140,7 +142,7 @@ export const HRDashboard = () => {
 				<div className="px-6 py-1 ">
 					<Outlet />
 				</div>
-			</div>
-		</div>
+			</OutletContainer>
+		</LayoutContainer>
 	);
 };

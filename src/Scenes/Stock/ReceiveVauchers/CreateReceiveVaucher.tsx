@@ -1,22 +1,81 @@
 import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
-import instance from "../../../API";
-import { useEffect, useMemo, useState } from "react";
-import { purchaseOrder } from "../../../types";
-import DocumentHeader from "../../../shared/DocumentHeader";
+import React, { useEffect, useMemo, useState } from "react";
+import { identity, purchaseOrder } from "../../../types";
 import { BackButton } from "../../../shared/BackButton";
 import PurchaseOrderFooter from "../PurchaseOrderFooter";
+import EditableTable from "../../../shared/EditableTable";
+import { fetchData, initialRows } from "../../../types/constants";
+import { collapseSideBar } from "../../../Redux/sideBarSlice";
+import { useDispatch } from "react-redux";
+import usePostData from "../../../hooks/usePostData";
+import CreatePurchaseSide from "./CreatePurchaseSide";
+import CreateReceiverSide from "./CreateReceiverSide";
+import CreateHeader from "./CreateHeader";
+import toast from "react-hot-toast";
 
 function CreateReceiveVaucher() {
 	const { register, watch, setValue } = useForm();
-	const receivingFrom = watch("from") || "";
+	const dispatch = useDispatch();
+	const { postData } = usePostData();
+	const resetFilledData = () => {
+		setRowsSupplier(initialRows);
+		setSelectedPurchaseOrder(undefined);
+	};
+	const [receivingFrom, setReceivingFrom] = useState<string>("");
 	const query = watch("query");
 	const headers: string[] = ["Item", "Price", "Quantity", "Unit", "Total"];
 	const [purchaseOrders, setPurchaseOrders] = useState([]);
-	let [rowsReceive, setRowsReceive] = useState();
-	let [rowsPurchase, setRowsPurchase] = useState();
+	const [suppliers, setSuppliers] = useState([]);
+	const [items, setItems] = useState([]);
+	const [selectedSupplier, setSelectedSupplier] = useState();
+	const [rowsReceive, setRowsReceive] = useState([]);
+	const [rowsSupplier, setRowsSupplier] = useState(initialRows);
+	const [rowsPurchase, setRowsPurchase] = useState([]);
 	const [createdId, setCreatedId] = useState<string | null>(null);
 	const [selectedPurchaseOrder, setSelectedPurchaseOrder] = useState();
+	const replaceItemWithIndex = (index, selectedItem) => {
+		const updatedRows = [...rowsSupplier];
+		updatedRows[index] = {
+			...updatedRows[index],
+			id: selectedItem.id,
+			name: selectedItem.name,
+			price: selectedItem.price,
+		};
+		setRowsSupplier(updatedRows);
+	};
+	const updateRequestItems = (selectedItem) => {
+		if (items.length === 0) {
+			const indexToReplace = rowsSupplier.findIndex((obj) => obj.name === "");
+			replaceItemWithIndex(indexToReplace, selectedItem);
+		} else {
+			// Check if an item with the same name already exists in requestItems
+			const itemExists = rowsSupplier.some(
+				(item) => item.name === selectedItem.name
+			);
+
+			if (!itemExists) {
+				const indexToReplace = rowsSupplier.findIndex((obj) => obj.name === "");
+				if (indexToReplace !== -1) {
+					replaceItemWithIndex(indexToReplace, selectedItem);
+				} else {
+					setRowsSupplier((prevRows) => [
+						...prevRows,
+						{
+							name: selectedItem.name,
+							id: selectedItem.id,
+							price: selectedItem.price,
+							quantity: 0,
+							times: 0,
+							date: "",
+						},
+					]);
+				}
+			} else {
+				console.log(`Item  already exists in rowsSupplier`);
+			}
+		}
+	};
 	const onChangeInput = (e, id, dataSet, doc) => {
 		const { name, value } = e.target;
 		const editData = dataSet.map((item) =>
@@ -44,16 +103,17 @@ function CreateReceiveVaucher() {
 			receivingFrom === "purchaseorder" &&
 			query !== ""
 		) {
-			await instance
-				.get(`/stock/purchaseorder/rec/${query}`)
-				.then((res) => {
-					console.log("res", res);
-					setPurchaseOrders(res.data.data);
-				})
-				.catch((err) => {
-					console.log("err", err);
-				});
+			const data = await fetchData(`/stock/purchaseorder/rec/${query}`);
+			setPurchaseOrders(data);
 		}
+	};
+	const searchSuppliers = async () => {
+		const data = await fetchData(`/stock/suppliers/rec/${query}`);
+		setSuppliers(data);
+	};
+	const getItems = async () => {
+		const data = await fetchData(`/stock/items/`);
+		setItems(data.ungrouped);
 	};
 	const balance = useMemo(() => {
 		if (rowsPurchase && rowsReceive) {
@@ -72,32 +132,56 @@ function CreateReceiveVaucher() {
 		}
 	}, [rowsPurchase, rowsReceive]);
 	const createVoucher = async () => {
-		const purchaseSide = rowsPurchase;
-		const process1 = rowsReceive.map((item) => {
-			const { Item, ...rest } = item;
-			return {
-				...rest,
-				receiveQuantity: item.requestQuantity,
-				stockPurchaseOrderId: selectedPurchaseOrder?.id,
-			};
-		});
-
-		await instance
-			.post("/stock/receivevaucher", {
+		let res;
+		if (receivingFrom === "purchaseorder") {
+			const purchaseSide = rowsPurchase;
+			const process1 = rowsReceive.map((item) => {
+				const { Item, times, ...rest } = item;
+				return {
+					...rest,
+					receiveQuantity: item.requestQuantity,
+					stockPurchaseOrderId: selectedPurchaseOrder?.id,
+				};
+			});
+			res = await postData("/stock/receivevaucher", {
 				data: {
 					receive: process1,
 					purchase: purchaseSide,
 				},
-			})
-			.then((res) => {
-				setCreatedId(res.data.voucherId);
-			})
-			.catch((err) => {
-				console.log("err", err);
 			});
+		} else if (receivingFrom === "supplier") {
+			res = await postData("/stock/receivevaucher/sup", {
+				data: {
+					items: rowsSupplier.filter((item) => item.name != ""),
+					supplierId: selectedSupplier?.id,
+				},
+			});
+		}
+		if (res) {
+			setCreatedId(res.voucherId);
+			toast.success("Receive voucher submitted !!!");
+		}
 	};
+	const SubmitComponent = () => (
+		<div className="flex items-center justify-between w-full my-2 text-xs">
+			<p>Done on {new Date().toLocaleDateString("fr-FR")}</p>
+			<button
+				type="button"
+				onClick={createVoucher}
+				className="flex gap-3 px-4 py-2 text-white bg-teal-900 rounded-[4px]">
+				Submit <CheckIcon className="w-4 h-4" />
+			</button>
+		</div>
+	);
 	useEffect(() => {
-		searchPurchaseOrders();
+		if (receivingFrom === "purchaseorder") {
+			searchPurchaseOrders();
+		} else if (receivingFrom === "supplier") {
+			searchSuppliers();
+			if (selectedSupplier !== "") {
+				getItems();
+			}
+		}
 	}, [receivingFrom, query]);
 	return (
 		<div>
@@ -107,7 +191,12 @@ function CreateReceiveVaucher() {
 					<div className="flex col-span-8 gap-2">
 						<div className="flex items-center justify-center gap-2 text-xs">
 							<p className="font-bold">Receiving from</p>
-							<select className="text-xs " {...register("from")}>
+							<select
+								className="text-xs "
+								onChange={(e) => {
+									setReceivingFrom(e.target.value);
+									resetFilledData();
+								}}>
 								<option value="">Select</option>
 								<option value="purchaseorder">Purchase order</option>
 								<option value="supplier">Supplier</option>
@@ -119,29 +208,62 @@ function CreateReceiveVaucher() {
 								<MagnifyingGlassIcon className="w-4 h-4 text-login-blue" />
 								<input
 									placeholder="Search"
+									value={query}
 									className="w-full h-full text-xs bg-transparent focus:outline-none focus-border-none placeholder:text-xs placeholder:font-bold"
 									{...register("query")}
 								/>
 							</div>
-							{query && query !== "" && purchaseOrders.length !== 0 && (
+
+							{query && query !== "" && (
 								<div className="relative w-full">
 									<div className="absolute w-full bg-white">
-										{purchaseOrders.map((pur: purchaseOrder) => (
-											<p
-												onClick={() => {
-													setSelectedPurchaseOrder(pur);
-													setRowsReceive(pur.StockPurchaseOrderDetails);
-													setRowsPurchase(pur.StockPurchaseOrderDetails);
-													setValue("query", "");
-												}}
-												className="p-2 text-xs font-bold hover:bg-slate-200 hover:cursor-pointer">
-												{pur.purchaseOrderId}
-											</p>
-										))}
+										{receivingFrom === "purchaseorder" &&
+											purchaseOrders.map((pur: purchaseOrder) => (
+												<p
+													onClick={() => {
+														setSelectedPurchaseOrder(pur);
+														setRowsReceive(pur.StockPurchaseOrderDetails);
+														setRowsPurchase(pur.StockPurchaseOrderDetails);
+														setValue("query", "");
+													}}
+													className="p-2 text-xs font-bold hover:bg-slate-200 hover:cursor-pointer">
+													{pur.purchaseOrderId}
+												</p>
+											))}
+										{receivingFrom === "supplier" &&
+											query !== "" &&
+											suppliers &&
+											suppliers.map((supplier) => (
+												<p
+													onClick={() => {
+														setSelectedSupplier((prev) => supplier);
+														dispatch(collapseSideBar());
+														setValue("query", "");
+													}}>
+													{supplier.name}
+												</p>
+											))}
 									</div>
 								</div>
 							)}
 						</div>
+						{receivingFrom === "supplier" && selectedSupplier && (
+							<div className="">
+								<select
+									onChange={(e) => {
+										const selected =
+											items && items.find((el) => el.id == e.target.value);
+										updateRequestItems(selected);
+									}}
+									className="text-xs ">
+									<option>Select items</option>
+									{items &&
+										items.map((item: identity) => (
+											<option value={item.id}>{item.name}</option>
+										))}
+								</select>
+							</div>
+						)}
 					</div>
 					<div className="grid content-center grid-flow-col col-span-4 gap-2 ">
 						<div className="flex items-center justify-center gap-2 text-xs">
@@ -151,227 +273,43 @@ function CreateReceiveVaucher() {
 					</div>
 				</form>
 			</div>
-			<DocumentHeader />
-			<p className="w-full text-xs font-bold text-center uppercase">
-				Receive Vaucher {createdId}
-			</p>
-			{selectedPurchaseOrder && (
+			<CreateHeader createdId={createdId} />
+			{receivingFrom === "purchaseorder" && selectedPurchaseOrder && (
 				<div>
 					<div className="flex">
-						<div>
-							<p className="my-2 text-xs font-bold">Purchase order</p>
-							<div className="editableTable">
-								<table>
-									<thead>
-										<tr>
-											{headers.map((header) => (
-												<th key={header}>{header}</th>
-											))}
-										</tr>
-									</thead>
-									<tbody>
-										{rowsPurchase.map((item) => (
-											<tr key={item.id}>
-												<td key="name">
-													<input
-														name="name"
-														value={item.Item["name"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsPurchase, "purc")
-														}
-														placeholder=""
-													/>
-												</td>
-												<td key="price">
-													<input
-														name="unitPrice"
-														value={item["unitPrice"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsPurchase, "purc")
-														}
-														placeholder=""
-													/>
-												</td>
-												<td key="quantity">
-													<input
-														name="requestQuantity"
-														value={item["requestQuantity"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsPurchase, "purc")
-														}
-														placeholder=""
-													/>
-												</td>
-												<td key="unit">
-													<input
-														name="unit"
-														value={item["unit"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsPurchase, "purc")
-														}
-														placeholder=""
-													/>
-												</td>
-
-												<td>
-													<input
-														name="total"
-														type="text"
-														className="text-xs"
-														value={Number(
-															item.unitPrice * item.requestQuantity
-														).toLocaleString()}
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsPurchase, "purc")
-														}
-														placeholder=""
-														readOnly={false}
-													/>
-												</td>
-											</tr>
-										))}
-										<tr className="text-xs font-bold">
-											<td colSpan={headers.length - 1}>Total</td>
-											<td>
-												{rowsPurchase
-													.reduce((accumulator, item) => {
-														const prod = item.unitPrice * item.requestQuantity;
-														return prod + accumulator;
-													}, 0)
-													.toLocaleString()}
-											</td>
-										</tr>
-										<tr>
-											<td className="text-xs font-bold">Balance</td>
-											<td colSpan={headers.length - 1} />
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
-						<div>
-							<p className="my-2 text-xs font-bold">Receive vaucher</p>
-							<div className="editableTable">
-								<table>
-									<thead>
-										<tr>
-											{headers.map((header) => (
-												<th key={header}>{header}</th>
-											))}
-										</tr>
-									</thead>
-									<tbody>
-										{[...rowsReceive].map((item) => (
-											<tr key={item.id}>
-												<td key="name">
-													<input
-														name="name"
-														value={item.Item["name"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsReceive, "rec")
-														}
-														placeholder=""
-													/>
-												</td>
-												<td key="price">
-													<input
-														name="unitPrice"
-														value={item["unitPrice"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsReceive, "rec")
-														}
-														placeholder=""
-													/>
-												</td>
-												<td key="quantity">
-													<input
-														name="requestQuantity"
-														value={item["requestQuantity"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsReceive, "rec")
-														}
-														placeholder=""
-													/>
-												</td>
-												<td key="unit">
-													<input
-														name="unit"
-														value={item["unit"]}
-														readOnly={false}
-														type="text"
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsReceive, "rec")
-														}
-														placeholder=""
-													/>
-												</td>
-
-												<td>
-													<input
-														name="total"
-														type="text"
-														className="text-xs"
-														value={Number(
-															item.unitPrice * item.requestQuantity
-														).toLocaleString()}
-														onChange={(e) =>
-															onChangeInput(e, item.id, rowsReceive, "rec")
-														}
-														placeholder=""
-														readOnly={false}
-													/>
-												</td>
-											</tr>
-										))}
-										<tr className="text-xs font-bold">
-											<td className="text-xs" colSpan={headers.length - 1}>
-												Total
-											</td>
-											<td className="text-xs">
-												{rowsReceive
-													.reduce((accumulator, item) => {
-														const prod = item.unitPrice * item.requestQuantity;
-														return prod + accumulator;
-													}, 0)
-													.toLocaleString()}
-											</td>
-										</tr>
-										<tr>
-											<td colSpan={headers.length - 1} />
-											<td className="text-xs font-bold">
-												{balance.toLocaleString()}
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-						</div>
+						<CreatePurchaseSide
+							headers={headers}
+							rowsPurchase={rowsPurchase}
+							onChangeInput={onChangeInput}
+						/>
+						<CreateReceiverSide
+							headers={headers}
+							rowsReceive={rowsReceive}
+							onChangeInput={onChangeInput}
+							balance={balance}
+						/>
 					</div>
 					<PurchaseOrderFooter />
-					<div className="flex items-center justify-between w-full text-xs">
-						<p>Done on {new Date().toLocaleDateString("fr-FR")}</p>
-						<button
-							type="button"
-							onClick={createVoucher}
-							className="flex gap-3 px-4 py-2 text-white bg-teal-900 rounded-sm">
-							Submit <CheckIcon className="w-4 h-4" />
-						</button>
-					</div>
+					<SubmitComponent />
 				</div>
+			)}
+
+			{receivingFrom && receivingFrom === "supplier" && (
+				<React.Fragment>
+					<EditableTable
+						cols={["name", "price", "quantity", "unit"]}
+						totals={["total"]}
+						headers={["item", "Price", "Quantity", "Unit", "Total"]}
+						subtotalCols={["price", "quantity"]}
+						data={rowsSupplier}
+						readOnlyCols={["name"]}
+						readOnly={false}
+						type="purchase order"
+						setData={setRowsSupplier}
+						hidePrice={false}
+					/>
+					<SubmitComponent />
+				</React.Fragment>
 			)}
 		</div>
 	);

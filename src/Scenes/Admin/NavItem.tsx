@@ -1,7 +1,6 @@
 import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 import { sideBarSizeSelector } from "../../Redux/sideBarSlice";
-import { motion } from "framer-motion";
 
 interface Props {
 	page: string;
@@ -25,7 +24,7 @@ export const NavItem = ({
 		<NavLink
 			to={link}
 			className={({ isActive }) =>
-				`flex text-sm items-center  transition-all duration-300 delay-100 ${
+				`flex text-sm items-center   ${
 					isFull ? "gap-3" : "justify-center"
 				} p-2 font-medium ${
 					isActive && location === url[url.length - 1]
@@ -34,11 +33,8 @@ export const NavItem = ({
 				} `
 			}>
 			{children}
-			<motion.p
-				animate={{ display: isFull ? "block" : "hidden" }}
-				transition={{ delay: 0.6 }}>
-				{isFull && page}
-			</motion.p>
+
+			{isFull && page}
 		</NavLink>
 	);
 };
