@@ -1,9 +1,12 @@
-import React from "react";
+import { Outlet, useOutletContext } from "react-router-dom";
 
-type Props = {};
-
-function CostingCenterRequests({}: Props) {
-	return <div>CostingCenterRequests</div>;
+function CostingCenterRequests() {
+	const { id } = useOutletContext();
+	return (
+		<div>
+			<Outlet context={{id}} />
+		</div>
+	);
 }
 
 export default CostingCenterRequests;

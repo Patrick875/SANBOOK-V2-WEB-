@@ -7,8 +7,7 @@ import { useNavigate } from "react-router-dom";
 function AllRequests() {
 	const navigate = useNavigate();
 	const { register } = useForm();
-	const [data, loading, error] = useFetchData("/stock/costingcenterrequests");
-	console.log("this is data", data);
+	const [data, loading] = useFetchData("/stock/costingcenterrequests");
 
 	return (
 		<div>
@@ -26,7 +25,7 @@ function AllRequests() {
 					</form>
 				</div>
 			</div>
-			<div className="grid grid-flow-col grid-cols-4 bg-white">
+			<div className="grid grid-flow-col grid-cols-5 bg-white">
 				<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 					File
 				</div>
@@ -35,6 +34,9 @@ function AllRequests() {
 				</div>
 				<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 					From
+				</div>
+				<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
+					Status
 				</div>
 				<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 					CreatedBy
@@ -49,7 +51,7 @@ function AllRequests() {
 						onClick={() => {
 							navigate(`${item.id}`);
 						}}
-						className="grid grid-flow-col grid-cols-4 bg-white cursor-pointer ">
+						className="grid grid-flow-col grid-cols-5 bg-white cursor-pointer ">
 						<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 							File
 						</div>
@@ -58,6 +60,9 @@ function AllRequests() {
 						</div>
 						<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 							{item.CostingCenter.name}
+						</div>
+						<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
+							{item.status}
 						</div>
 						<div className="p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap"></div>
 					</div>

@@ -187,3 +187,49 @@ export interface identity {
     name: string;
     id: number;
 }
+
+export interface baughtItem {
+    id: number;
+    item: number | number;
+    quantity: number;
+    price: number;
+    unit: null | number;
+    createdAt: string;
+    updatedAt: string;
+    Item: item | null
+}
+
+export interface item {
+    id: number;
+    name: string;
+    category: number;
+    store: number;
+    mainunit: number;
+    price: number;
+    createdBy: null | number;
+    createdAt: string;
+    updatedAt: string;
+}
+
+
+export interface stockRequestItem {
+    id: number;
+    request: number;
+    item: number;
+    quantity: number;
+    unit: null | string;
+    price: number;
+    createdAt: string;
+    updatedAt: string;
+    BaughtItem: baughtItem
+}
+
+export interface stockrequest {
+    CostingCenterRequestItems?: stockRequestItem[] | null;
+    costingcenter: number;
+    createdAt: string;
+    date: string;
+    id: number;
+    status: string;
+    updatedAt: string
+}

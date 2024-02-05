@@ -1,8 +1,4 @@
-import React from "react";
-
-type Props = {};
-
-function CostingCenterRequest({}: Props) {
+function CostingCenterRequest() {
 	return <div>CostingCenterRequest</div>;
 }
 

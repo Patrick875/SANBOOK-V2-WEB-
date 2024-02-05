@@ -4,7 +4,7 @@ import { useFetchData } from "../../../hooks/useFetchData";
 import { HiDownload } from "react-icons/hi";
 import { BsPrinter } from "react-icons/bs";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
-import TableHeader from "./TableHeader";
+import TableHeader from "./ItemListTableHeader";
 import { useFetchPaginatedData } from "../../../hooks/useFetchPaginatedData";
 import Pages from "../../../shared/Pages";
 import { useEffect, useState } from "react";

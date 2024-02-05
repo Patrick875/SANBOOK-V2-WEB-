@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import instance from "../API";
 
-export const useFetchData = (url: string) => {
+type FetchDataResult = [
+	any,
+	boolean,
+	any,
+	number | undefined,
+	(url: string) => Promise<any | null>
+];
+
+export const useFetchData = <T = any,>(url: string): FetchDataResult => {
 	const [data, setData] = useState();
 	const [loading, setLoading] = useState(false);
 	const [length, setLength] = useState(undefined);
