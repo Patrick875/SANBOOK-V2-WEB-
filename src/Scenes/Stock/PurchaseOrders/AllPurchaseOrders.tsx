@@ -8,6 +8,7 @@ import PDFButton from "../../../shared/PDFButton";
 import TableHead from "../Common/TableHead";
 import { useState } from "react";
 import Pages from "../../../shared/Pages";
+import LocationInApp from "../../../shared/LocationInApp";
 
 interface purchaseOrderListProps {
 	item: purchaseOrder;
@@ -45,8 +46,11 @@ const PurchaseOrderListItem = ({ item }: purchaseOrderListProps) => {
 };
 
 function AllPurchaseOrders() {
-	const { register } = useForm();
-	const [data, loading] = useFetchData("/stock/purchaseorder");
+	const { register, watch } = useForm();
+	const query = watch("query");
+	const [data, loading] = useFetchData(
+		`/stock/purchaseorder?purchase=${query}`
+	);
 	const itemsPerPage = 5;
 	const [pageNumber, setPageNumber] = useState<number>(0);
 	const pagesVisited = pageNumber * itemsPerPage;
@@ -59,6 +63,7 @@ function AllPurchaseOrders() {
 
 	return (
 		<div className="w-full">
+			<LocationInApp location="Purchase orders" />
 			<div className="grid content-center w-full grid-flow-col grid-cols-12 gap-2 px-2 py-2 bg-white rounded-md justify-stretch">
 				<div className="col-start-1 col-end-9">
 					<form className="flex items-center w-full gap-3 px-3 py-1 ">
@@ -69,16 +74,6 @@ function AllPurchaseOrders() {
 								className="w-full bg-transparent focus:outline-none focus-border-none placeholder:text-sm placeholder:font-bold"
 								{...register("query")}
 							/>
-						</div>
-						<div className="flex gap-2 ">
-							<div className="flex gap-2 text-xs justify-items-center">
-								<label>From</label>
-								<input type="date" className="block " />
-							</div>
-							<div className="flex items-center gap-2 text-xs">
-								<label>To</label>
-								<input type="date" className="block " />
-							</div>
 						</div>
 					</form>
 				</div>

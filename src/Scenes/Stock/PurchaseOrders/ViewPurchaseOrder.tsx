@@ -45,9 +45,6 @@ function ViewPurchaseOrder() {
 
 		await instance
 			.patch(`/stock/purchaseorder/${order}`, { order: rowsPurchase, total })
-			.then((res) => {
-				console.log("res", res);
-			})
 			.catch((err) => {
 				console.log("err", err);
 			});

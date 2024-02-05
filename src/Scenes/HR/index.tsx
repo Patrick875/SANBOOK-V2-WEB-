@@ -124,6 +124,12 @@ const navlinks: navitem[] = [
 		icon: <IoIdCardOutline />,
 		location: "positions",
 	},
+	{
+		page: "Storage",
+		link: "stock",
+		icon: <IoIdCardOutline />,
+		location: "stock",
+	},
 ];
 
 export const HRDashboard = () => {

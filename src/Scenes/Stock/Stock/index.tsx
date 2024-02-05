@@ -9,6 +9,7 @@ import { useFetchPaginatedData } from "../../../hooks/useFetchPaginatedData";
 import Pages from "../../../shared/Pages";
 import { useEffect, useState } from "react";
 import { identity } from "../../../types";
+import LocationInApp from "../../../shared/LocationInApp";
 
 interface store extends identity {
 	active: boolean;
@@ -48,24 +49,22 @@ const Item = ({ item }: ItemProps) => {
 
 const Stock = () => {
 	const { register, watch } = useForm();
+	const name = watch("query") || "";
 	const category = watch("category") || "";
 	const store = watch("store") || "";
 	const [stores] = useFetchData("/stock/stores");
 	const [categories] = useFetchData("/stock/categories");
-	const {
-		data: items,
-		length,
-		fetchData,
-	} = useFetchPaginatedData(
-		`/stock/currentstock?category=${category}&store=${store}`
-	);
 	const [pageNumber, setPageNumber] = useState<number>(0);
-	const [itemsPerPage, setItemsPerPage] = useState<number>(30);
-	useEffect(() => {
-		fetchData(`/stock/currentstock?category=${category}&store=${store}`);
-	}, [category, store]);
+	const [itemsPerPage, setItemsPerPage] = useState<number>(15);
+	const { data: items, length } = useFetchPaginatedData(
+		`/stock/currentstock?name=${name}&category=${category}&store=${store}&page=${
+			pageNumber + 1
+		}&itemsPerPage=${itemsPerPage}`
+	);
+
 	return (
 		<div className="w-full">
+			<LocationInApp location="Current Stock" />
 			<div className="flex items-center w-full gap-2 px-3 py-2 bg-white rounded-md">
 				<form className="grid items-center justify-between w-full grid-flow-col bg-white">
 					<div className="col-span-3">
@@ -87,9 +86,12 @@ const Stock = () => {
 								className="w-full px-2 text-xs border-2 rounded-sm border-slate-500">
 								<option value="">Select ...</option>
 								{categories &&
-									categories.map((category: identity) => (
-										<option key={category.id} value={category.id}>
-											{category.name}
+									categories.map((cat: identity) => (
+										<option
+											selected={cat.id == category}
+											key={cat.id}
+											value={cat.id}>
+											{cat.name}
 										</option>
 									))}
 							</select>
@@ -101,9 +103,9 @@ const Stock = () => {
 								className="w-full px-2 text-xs border-2 rounded-sm border-slate-500">
 								<option value="">Select ...</option>
 								{stores &&
-									stores.map((store: identity) => (
-										<option key={store.id} value={store.id}>
-											{store.name}
+									stores.map((st: identity) => (
+										<option selected={store == st.id} key={st.id} value={st.id}>
+											{st.name}
 										</option>
 									))}
 							</select>
@@ -138,7 +140,7 @@ const Stock = () => {
 						))}
 					</div>
 					<Pages
-						dataLength={length}
+						dataLength={length && length}
 						setPageNumber={setPageNumber}
 						itemsPerPage={itemsPerPage}
 					/>

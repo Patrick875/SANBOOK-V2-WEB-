@@ -2,6 +2,7 @@ import { useForm } from "react-hook-form";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Link, useNavigate } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
+import LocationInApp from "../../../shared/LocationInApp";
 
 function Stores() {
 	const navigate = useNavigate();
@@ -10,6 +11,7 @@ function Stores() {
 
 	return (
 		<div className="w-full">
+			<LocationInApp location="Stores" />
 			<div className="flex items-center w-full px-3 py-2 bg-white rounded-md">
 				<div className="flex-1">
 					<form className=" w-2/5 flex items-center gap-3 p-2 px-4 bg-search-bg rounded-[8px] ">

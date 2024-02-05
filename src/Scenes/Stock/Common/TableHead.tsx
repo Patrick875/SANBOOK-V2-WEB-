@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 
 const TableHead = (): ReactElement => (
-	<div className="border-2 border-gray-200">
+	<div className="">
 		<div className="grid grid-flow-col grid-cols-12">
 			<div className="col-span-3 p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 				File

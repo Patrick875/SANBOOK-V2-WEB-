@@ -3,12 +3,14 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
 import { itemcategory } from "../../../types";
+import LocationInApp from "../../../shared/LocationInApp";
 
 const AllItemCategories = () => {
 	const { register } = useForm();
 	const [categories, loading] = useFetchData("/stock/categories");
 	return (
 		<div>
+			<LocationInApp location="Item categories" />
 			<div className="flex items-center w-full px-3 py-2 bg-white rounded-md">
 				<div className="flex-1">
 					<form className=" w-2/5 flex items-center gap-3 p-2 px-4 bg-search-bg rounded-[8px] ">

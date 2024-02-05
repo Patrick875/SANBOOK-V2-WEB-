@@ -60,8 +60,12 @@ function CreateReceiverSide({
 								</td>
 								<td key="quantity">
 									<input
-										name="receivedQuantity"
-										value={item["receivedQuantity"]}
+										name={supplier ? "receivedQuantity" : "requestQuantity"}
+										value={
+											supplier
+												? item["receivedQuantity"]
+												: item["requestQuantity"]
+										}
 										readOnly={false}
 										type="text"
 										onChange={(e) =>
@@ -89,7 +93,9 @@ function CreateReceiverSide({
 										type="text"
 										className="text-xs"
 										value={Number(
-											item.unitPrice * item.receivedQuantity
+											supplier
+												? item.unitPrice * item.receivedQuantity
+												: item.unitPrice * item.requestQuantity
 										).toLocaleString()}
 										onChange={(e) =>
 											onChangeInput(e, item.id, rowsReceive, docType)
@@ -107,7 +113,9 @@ function CreateReceiverSide({
 							<td className="text-xs">
 								{rowsReceive
 									.reduce((accumulator, item) => {
-										const prod = item.unitPrice * item.receivedQuantity;
+										const prod = supplier
+											? item.unitPrice * item.receivedQuantity
+											: item.unitPrice * item.requestQuantity;
 										return prod + accumulator;
 									}, 0)
 									.toLocaleString()}

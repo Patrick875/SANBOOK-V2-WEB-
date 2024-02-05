@@ -7,6 +7,7 @@ import { BsPrinter } from "react-icons/bs";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
 import { FaRegDotCircle } from "react-icons/fa";
 import { item } from "../../../types";
+import LocationInApp from "../../../shared/LocationInApp";
 
 const AllStockItems = () => {
 	const { register } = useForm();
@@ -28,6 +29,7 @@ const AllStockItems = () => {
 
 	return (
 		<div>
+			<LocationInApp location="All Stock Items" />
 			<div className="flex items-center w-full gap-2 px-3 py-2 bg-white rounded-md">
 				<form className="grid items-center w-full grid-flow-col grid-cols-12 bg-white justify-stretch">
 					<div className="mx-2 col-span-3 flex items-center gap-3 p-1 px-3 bg-search-bg rounded-[8px]">

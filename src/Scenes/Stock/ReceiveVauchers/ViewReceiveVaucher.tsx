@@ -73,6 +73,8 @@ function ViewReceiveVaucher() {
 			.patch(`${url}`, data)
 			.then((res) => {
 				setSuccess(true);
+				toast.success("Voucher updated successfuly !!!");
+
 				return res.data;
 			})
 			.catch((error) => {
@@ -124,7 +126,6 @@ function ViewReceiveVaucher() {
 				const prod = item.unitPrice * item.receivedQuantity;
 				return prod + accumulator;
 			}, 0);
-			console.log("total-rec", totalRec);
 
 			await updateData(`/stock/receivevaucher/${order}`, {
 				data: {
@@ -182,7 +183,8 @@ function ViewReceiveVaucher() {
 						<div>
 							<div className="w-full">
 								<p className="my-3 text-xs font-bold uppercase">
-									Ref : Supplier list {data.supplierList}
+									Ref : Supplier list{" "}
+									{data.SupplierList && data.SupplierList.supplierListId}
 								</p>
 								<CreateReceiverSide
 									headers={headers}
@@ -195,7 +197,7 @@ function ViewReceiveVaucher() {
 						</div>
 					)}
 					<PurchaseOrderFooter />
-					{success && toast.success("Voucher updated successfuly !!!")}
+
 					<div className="flex items-center justify-between w-full text-xs">
 						<p>Done on {new Date(data.date).toLocaleString("fr-FR")}</p>
 						<button

@@ -6,9 +6,10 @@ import { useFetchData } from "../../../hooks/useFetchData";
 import { identity } from "../../../types";
 import { useState } from "react";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
+import toast from "react-hot-toast";
 
 function CreateSupplier() {
-	const { register, handleSubmit } = useForm();
+	const { register, handleSubmit, reset } = useForm();
 	const [selectedItems, setSelectedItems] = useState<identity[]>([]);
 	const [items, loading] = useFetchData("/stock/items");
 
@@ -22,7 +23,12 @@ function CreateSupplier() {
 	const create = async (data) => {
 		const submitItems = selectedItems.map((el) => el.id);
 		const submit = { ...data, items: submitItems };
-		await postData("/stock/suppliers", submit);
+		const res = await postData("/stock/suppliers", submit);
+		if (res) {
+			toast.success("Supplier Created !!!");
+			reset();
+			setSelectedItems([]);
+		}
 	};
 	return (
 		<div>
@@ -30,7 +36,7 @@ function CreateSupplier() {
 			<p className="py-4 font-bold text-center ">Add New Supplier</p>
 			<div className="w-4/5 mx-auto bg-white rounded-md md:w-2/4 ">
 				<form onSubmit={handleSubmit(create)} className="p-6 mx-auto ">
-					<div className="py-2 flex gap-3 w-full">
+					<div className="flex w-full gap-3 py-2">
 						<div>
 							<label className="block pb-2 text-xs font-bold ">Name</label>
 							<input
@@ -51,7 +57,7 @@ function CreateSupplier() {
 						</div>
 					</div>
 					<div className="w-full py-2">
-						<p className=" pb-2 text-xs font-bold ">Items</p>
+						<p className="pb-2 text-xs font-bold ">Items</p>
 						<select
 							onChange={selectItem}
 							required

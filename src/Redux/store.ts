@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import createContractReducer from './../Scenes/HR/contractSlice'
+import createContractReducer from '../Scenes/HR/Employees/contractSlice'
 import authUserReducer from './userSlice'
 import sideBarSlice from "./sideBarSlice";
 export const store = configureStore({

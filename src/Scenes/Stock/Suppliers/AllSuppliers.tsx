@@ -2,21 +2,21 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
+import LocationInApp from "../../../shared/LocationInApp";
 
 function AllSuppliers() {
 	const { register } = useForm();
 	const navigate = useNavigate();
 	const [suppliers, loading] = useFetchData("/stock/suppliers");
-	console.log("suppliers", suppliers);
 
 	return (
 		<div>
+			<LocationInApp location="Suppliers" />
+
 			<div className="grid content-center w-full grid-flow-col grid-cols-12 gap-2 px-2 py-2 bg-white rounded-md justify-stretch">
 				<div className="col-start-1 col-end-9">
 					<form className="flex items-center w-full gap-3 px-3 py-1 ">
-						<div
-							className="flex 
-                        items-center w-2/5 gap-1 px-3 py-1 rounded-sm bg-search-bg">
+						<div className="flex items-center w-2/5 gap-1 px-3 py-1 rounded-sm bg-search-bg">
 							<MagnifyingGlassIcon className="w-5 h-5 text-login-blue" />
 							<input
 								placeholder="Search"
@@ -43,7 +43,7 @@ function AllSuppliers() {
 					suppliers.map((supplier) => (
 						<div
 							onClick={() => navigate(`${supplier.id}`)}
-							className="grid cursor-pointer grid-cols-2 p-2 text-xs">
+							className="grid grid-cols-2 p-2 text-xs cursor-pointer">
 							<p>{supplier.name}</p>
 							<p>{supplier.tel}</p>
 						</div>

@@ -7,7 +7,8 @@ import { RiEditBoxLine } from "react-icons/ri";
 import { receiveVoucher } from "../../../types";
 import TableHead from "../Common/TableHead";
 import Pages from "../../../shared/Pages";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import LocationInApp from "../../../shared/LocationInApp";
 
 interface receiveVoucherListProps {
 	item: receiveVoucher;
@@ -44,10 +45,18 @@ const ReceiveVoucherListItem = ({ item }: receiveVoucherListProps) => {
 };
 
 function AllReceiveVauchers() {
-	const { register } = useForm();
-	const [data, loading] = useFetchData("/stock/receivevaucher");
-	const itemsPerPage = 5;
+	const { register, watch } = useForm();
+	const query = watch("query");
+	const itemsPerPage = 15;
 	const [pageNumber, setPageNumber] = useState<number>(0);
+	const [data, loading, , length] = useFetchData(
+		`/stock/receivevaucher?receive=${query}&page=${
+			pageNumber + 1
+		}&itemsPerPage=${itemsPerPage}`
+	);
+
+	console.log("data", data);
+
 	const pagesVisited = pageNumber * itemsPerPage;
 
 	const displayItems =
@@ -58,6 +67,7 @@ function AllReceiveVauchers() {
 
 	return (
 		<div className="w-full">
+			<LocationInApp location="Receive Vouchers" />
 			<div className="grid content-center w-full grid-flow-col grid-cols-12 gap-2 px-2 py-2 bg-white rounded-md justify-stretch">
 				<div className="col-start-1 col-end-9">
 					<form className="flex items-center w-full gap-3 px-3 py-1 ">
@@ -98,7 +108,7 @@ function AllReceiveVauchers() {
 						{displayItems}
 
 						<Pages
-							dataLength={data.length}
+							dataLength={length && length}
 							setPageNumber={setPageNumber}
 							itemsPerPage={itemsPerPage}
 						/>

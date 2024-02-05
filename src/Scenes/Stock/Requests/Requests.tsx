@@ -1,5 +1,11 @@
+import { Outlet } from "react-router-dom";
+
 const Requests = () => {
-	return <div>Requests</div>;
+	return (
+		<div>
+			<Outlet />
+		</div>
+	);
 };
 
 export default Requests;

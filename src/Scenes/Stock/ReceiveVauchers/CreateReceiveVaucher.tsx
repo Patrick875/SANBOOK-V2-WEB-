@@ -1,5 +1,5 @@
 import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import React, { useEffect, useMemo, useState } from "react";
 import { identity, purchaseOrder } from "../../../types";
 import { BackButton } from "../../../shared/BackButton";
@@ -13,9 +13,11 @@ import CreatePurchaseSide from "./CreatePurchaseSide";
 import CreateReceiverSide from "./CreateReceiverSide";
 import CreateHeader from "./CreateHeader";
 import toast from "react-hot-toast";
+import DatePicker from "react-datepicker";
+import { IoCalendar } from "react-icons/io5";
 
 function CreateReceiveVaucher() {
-	const { register, watch, setValue } = useForm();
+	const { register, watch, setValue, control } = useForm();
 	const dispatch = useDispatch();
 	const { postData } = usePostData();
 	const resetFilledData = () => {
@@ -24,6 +26,7 @@ function CreateReceiveVaucher() {
 	};
 	const [receivingFrom, setReceivingFrom] = useState<string>("");
 	const query = watch("query");
+	const date = watch("date");
 	const headers: string[] = ["Item", "Price", "Quantity", "Unit", "Total"];
 	const [purchaseOrders, setPurchaseOrders] = useState([]);
 	const [suppliers, setSuppliers] = useState([]);
@@ -147,6 +150,7 @@ function CreateReceiveVaucher() {
 				data: {
 					receive: process1,
 					purchase: purchaseSide,
+					date: date,
 				},
 			});
 		} else if (receivingFrom === "supplier") {
@@ -154,6 +158,7 @@ function CreateReceiveVaucher() {
 				data: {
 					items: rowsSupplier.filter((item) => item.name != ""),
 					supplierId: selectedSupplier?.id,
+					date: date,
 				},
 			});
 		}
@@ -268,12 +273,26 @@ function CreateReceiveVaucher() {
 					<div className="grid content-center grid-flow-col col-span-4 gap-2 ">
 						<div className="flex items-center justify-center gap-2 text-xs">
 							<label className="font-bold">Received on</label>
-							<input type="date" className="block " />
+							<Controller
+								name="date"
+								control={control}
+								render={({ field }) => (
+									<DatePicker
+										placeholderText="select received date"
+										onChange={(date) => field.onChange(date)}
+										selected={field.value}
+										locale="fr-FR"
+										showIcon
+										className="border-[1.5px] text-xs border-gray-800 rounded-[4px]"
+										icon={<IoCalendar className="w-3 h-3 text-sky-700" />}
+									/>
+								)}
+							/>
 						</div>
 					</div>
 				</form>
 			</div>
-			<CreateHeader createdId={createdId} />
+			<CreateHeader document="Receieve Voucher" createdId={createdId} />
 			{receivingFrom === "purchaseorder" && selectedPurchaseOrder && (
 				<div>
 					<div className="flex">
