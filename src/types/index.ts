@@ -132,7 +132,7 @@ interface Item {
     store: number;
     mainunit: number;
     price: number;
-    createdBy: any; // You can replace 'any' with the actual type of 'createdBy'
+    createdBy: any;
 }
 
 interface StockPurchaseOrderDetail {
@@ -209,6 +209,7 @@ export interface item {
     createdBy: null | number;
     createdAt: string;
     updatedAt: string;
+    StockUnit?: identity
 }
 
 
@@ -227,6 +228,7 @@ export interface stockRequestItem {
 export interface stockrequest {
     CostingCenterRequestItems?: stockRequestItem[] | null;
     costingcenter: number;
+    CostingCenter?: identity;
     createdAt: string;
     date: string;
     id: number;

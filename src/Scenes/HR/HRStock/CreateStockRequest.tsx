@@ -2,20 +2,21 @@ import { useState } from "react";
 import CreateHeader from "../../Stock/ReceiveVauchers/CreateHeader";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Controller, useForm } from "react-hook-form";
-import { useFetchData } from "../../../hooks/useFetchData";
+
 import { IoCalendar } from "react-icons/io5";
 import DatePicker from "react-datepicker";
-import EditableTable from "../../../shared/EditableTable";
+
 import EditableTableRequest from "../../../shared/EditableTableRequest";
 import { useFetchPaginatedData } from "../../../hooks/useFetchPaginatedData";
-import usePostData from "../../../hooks/usePostData";
+
+import toast from "react-hot-toast";
+import instance from "../../../API";
 
 function CreateStockRequest() {
 	const [listItems, setListItems] = useState([]);
 	const [createId, setCreateId] = useState<string | null>(null);
 	const { register, watch, setValue, control } = useForm();
 	const query = watch("query");
-	const { postData } = usePostData();
 	const { data: items, length } = useFetchPaginatedData(
 		`/stock/currentstock?name=${query}&page=${1}&itemsPerPage=${100}`
 	);
@@ -25,12 +26,16 @@ function CreateStockRequest() {
 			center: 5,
 			items: listItems,
 		};
-		const res = await postData("/stock/costingcenterrequests", data);
 
-		console.log("data", res);
+		await instance
+			.post("/stock/costingcenterrequests", data)
+			.then(() => {
+				toast.success("Success !!!");
+			})
+			.catch((err) => {
+				toast.error(err.code);
+			});
 	};
-
-	console.log("items", listItems);
 
 	return (
 		<div>

@@ -61,6 +61,7 @@ const Stock = () => {
 			pageNumber + 1
 		}&itemsPerPage=${itemsPerPage}`
 	);
+	console.log("items", items);
 
 	return (
 		<div className="w-full">
@@ -155,42 +156,3 @@ const Stock = () => {
 };
 
 export default Stock;
-
-// // ... (previous imports)
-
-// const Stock = () => {
-//   const { register, watch } = useForm();
-//   const category = watch('category') || '';
-//   const store = watch('store') || '';
-//   const [stores] = useFetchData('/stock/stores');
-//   const [categories] = useFetchData('/stock/categories');
-//   const {
-//     data: items,
-//     length,
-//     fetchData,
-//   } = useFetchPaginatedData(
-//     `/stock/currentstock?category=${category}&store=${store}`
-//   );
-//   const [pageNumber, setPageNumber] = useState<number>(0);
-//   const [itemsPerPage, setItemsPerPage] = useState<number>(8);
-
-//   console.log('items', items);
-
-//   // Use useEffect to make the initial API call when the component mounts
-// //   useEffect(() => {
-// //     fetchData(`/stock/currentstock?category=${category}&store=${store}`);
-// //   }, []); // Empty dependency array means this effect runs only once, on mount
-
-//   // Use another useEffect to listen for changes in category or store
-//   useEffect(() => {
-//     fetchData(`/stock/currentstock?category=${category}&store=${store}`);
-//   }, [category, store]);
-
-//   return (
-//     <div className="w-full">
-//       {/* ... (your existing JSX code) */}
-//     </div>
-//   );
-// };
-
-// export default Stock;

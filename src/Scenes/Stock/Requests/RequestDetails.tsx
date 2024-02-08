@@ -16,6 +16,7 @@ function RequestDetails() {
 	);
 
 	const [requestItems, setRequestItems] = useState([]);
+
 	useEffect(() => {
 		if (!error && !loading && request) {
 			setRequestItems(request.CostingCenterRequestItems);
@@ -56,6 +57,9 @@ function RequestDetails() {
 				toast.error(err.code);
 			});
 	};
+
+	console.log("requestitems", requestItems);
+	console.log("request", request);
 
 	return (
 		<div>
