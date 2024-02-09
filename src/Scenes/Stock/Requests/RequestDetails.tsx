@@ -6,10 +6,12 @@ import EditableRequestView from "../../../shared/EditableRequestView";
 import { stockrequest } from "../../../types";
 import instance from "../../../API";
 import toast from "react-hot-toast";
+import { useAuth } from "../../../Context/AuthContext";
 
 type fetchReturnData = [stockrequest, boolean, any];
 function RequestDetails() {
 	const { requestId } = useParams();
+	const { user } = useAuth();
 	const [requestStatus, setRequestStatus] = useState<string | null>();
 	const [request, loading, error] = useFetchData<fetchReturnData>(
 		`/stock/costingcenterrequests/${requestId}`
@@ -58,15 +60,18 @@ function RequestDetails() {
 			});
 	};
 
-	console.log("requestitems", requestItems);
-	console.log("request", request);
-
 	return (
 		<div>
 			{requestStatus === "PENDING" ? (
-				<p className="text-xs text-center w-1/4 mx-auto font-bold border-[1.2px] border-emerald-800 p-3">
-					Edit and take action on request
-				</p>
+				user.role === "admin" || user.role === "stock" ? (
+					<p className="text-xs text-center w-1/4 mx-auto font-bold border-[1.2px] border-emerald-800 p-3">
+						Edit and take action on request
+					</p>
+				) : (
+					<p className="text-xs text-center w-1/4 mx-auto font-bold border-[1.2px] border-emerald-800 p-3">
+						Request {requestStatus}
+					</p>
+				)
 			) : (
 				<p className="text-xs text-center w-1/4 mx-auto font-bold border-[1.2px] border-emerald-800 p-3">
 					Request {requestStatus}
@@ -83,26 +88,28 @@ function RequestDetails() {
 				readOnly={false}
 				setData={setRequestItems}
 			/>
-			{requestStatus === "PENDING" && (
-				<div className="flex justify-end mt-4 ">
-					<div className="flex gap-2">
-						<button
-							onClick={() => {
-								approveRequest();
-							}}
-							className="text-xs px-6 py-1 rounded-[4px] text-white bg-emerald-900">
-							Approve
-						</button>
-						<button
-							onClick={() => {
-								cancelRequest();
-							}}
-							className="text-xs px-6 py-1 rounded-[4px] text-white bg-pink-900">
-							Deny
-						</button>
+
+			{(user.role === "admin" || user.role === "stock") &&
+				requestStatus === "PENDING" && (
+					<div className="flex justify-end mt-4 ">
+						<div className="flex gap-2">
+							<button
+								onClick={() => {
+									approveRequest();
+								}}
+								className="text-xs px-6 py-1 rounded-[4px] text-white bg-emerald-900">
+								Approve
+							</button>
+							<button
+								onClick={() => {
+									cancelRequest();
+								}}
+								className="text-xs px-6 py-1 rounded-[4px] text-white bg-pink-900">
+								Deny
+							</button>
+						</div>
 					</div>
-				</div>
-			)}
+				)}
 		</div>
 	);
 }

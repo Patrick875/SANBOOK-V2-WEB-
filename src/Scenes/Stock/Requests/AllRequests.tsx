@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { useFetchData } from "../../../hooks/useFetchData";
 import { formatDate } from "../../../types/constants";
 import { useNavigate } from "react-router-dom";
+import LocationInApp from "../../../shared/LocationInApp";
 
 function AllRequests() {
 	const navigate = useNavigate();
@@ -11,6 +12,7 @@ function AllRequests() {
 
 	return (
 		<div>
+			<LocationInApp location="Requests" />
 			<div className="grid content-center w-full grid-flow-col grid-cols-12 gap-2 px-2 py-2 bg-white rounded-md justify-stretch">
 				<div className="col-start-1 col-end-9">
 					<form className="flex items-center w-full gap-3 px-3 py-1 ">

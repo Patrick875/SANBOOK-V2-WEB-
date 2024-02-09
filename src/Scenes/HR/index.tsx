@@ -126,9 +126,9 @@ const navlinks: navitem[] = [
 	},
 	{
 		page: "Storage",
-		link: "stock",
+		link: "stock/costing-centers/5",
 		icon: <IoIdCardOutline />,
-		location: "stock",
+		location: "stock/costing-centers/5",
 	},
 ];
 

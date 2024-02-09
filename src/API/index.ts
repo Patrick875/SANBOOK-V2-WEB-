@@ -8,13 +8,21 @@ const instance = axios.create({
 
 instance.interceptors.response.use(function (response) {
 
+
     if (response.data && response.data.user) {
+        let userRole: string = ''
+        if (response.data.user.role !== 'admin') {
+            userRole = response.data.user.Employee.Department.role
+        } else {
+            userRole = 'admin'
+        }
         Cookie.set('user', JSON.stringify({
             userId: response.data.user.id,
             username: response.data.user.username,
             email: response.data.user.email,
-            role: response.data.user.role
+            role: userRole
         }))
+        response.data.user.role = userRole
         Cookie.set('token', response.data.token)
 
     }

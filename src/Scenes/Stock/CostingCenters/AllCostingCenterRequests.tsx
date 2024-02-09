@@ -1,4 +1,4 @@
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
 import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useForm } from "react-hook-form";
@@ -7,11 +7,10 @@ import { formatDate } from "../../../types/constants";
 function AllCostingCenterRequests() {
 	const { register } = useForm();
 	const navigate = useNavigate();
-	const { id } = useOutletContext();
-	const [requests, loading] = useFetchData(
+	const { id } = useParams();
+	const [requests, loading, error] = useFetchData(
 		`/stock/costingcenterrequests?center=${id}`
 	);
-	console.log("requests made here", requests);
 	return (
 		<div>
 			<div className="grid content-center w-full grid-flow-col grid-cols-12 gap-2 px-2 py-2 bg-white rounded-md justify-stretch">
@@ -46,6 +45,11 @@ function AllCostingCenterRequests() {
 				</div>
 			</div>
 			{loading && <p className="w-full text-xs text-center">Loading ....</p>}
+			{!error && requests && requests.length == 0 && (
+				<p className="w-full my-2 text-center">
+					No requests made by costing center ...
+				</p>
+			)}
 			{requests &&
 				requests.length !== 0 &&
 				requests.map((item) => (

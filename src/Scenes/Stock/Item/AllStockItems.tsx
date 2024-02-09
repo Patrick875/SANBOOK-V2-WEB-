@@ -5,27 +5,43 @@ import { ReactElement, useState } from "react";
 import { HiDownload } from "react-icons/hi";
 import { BsPrinter } from "react-icons/bs";
 import { PiMicrosoftExcelLogoFill } from "react-icons/pi";
-import { FaRegDotCircle } from "react-icons/fa";
-import { item } from "../../../types";
+import { identity, item } from "../../../types";
 import LocationInApp from "../../../shared/LocationInApp";
+import Pages from "../../../shared/Pages";
 
 const AllStockItems = () => {
-	const { register } = useForm();
-	const [grouped, setGrouped] = useState<boolean>(false);
-	const [items, loading] = useFetchData("/stock/items");
+	const { register, watch } = useForm();
+	const name: string = watch("query");
+	const store: string = watch("store");
+	const category: string = watch("category");
+	const [items, loading] = useFetchData(
+		`/stock/items?name=${name}&store=${store}&category=${category}`
+	);
 	const [stores] = useFetchData("/stock/stores");
+	const [categories] = useFetchData("/stock/categories");
 	const TableHead = (): ReactElement => (
 		<thead className="border-2 border-gray-200">
 			<tr>
 				<th className="w-20 p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
 					Name
 				</th>
-				<th className="w-20 p-3 py-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
-					Price
-				</th>
 			</tr>
 		</thead>
 	);
+	const itemsPerPage = 10;
+	const [pageNumber, setPageNumber] = useState<number>(0);
+	const pagesVisited = pageNumber * itemsPerPage;
+	const displayItems =
+		items &&
+		items
+			.slice(pagesVisited, pagesVisited + itemsPerPage)
+			.map((el: identity) => {
+				return (
+					<tr className="text-xs" key={crypto.randomUUID()}>
+						<td className="px-3">{el.name}</td>
+					</tr>
+				);
+			});
 
 	return (
 		<div>
@@ -40,41 +56,37 @@ const AllStockItems = () => {
 							{...register("query")}
 						/>
 					</div>
-					<div className="flex col-span-5 gap-3 ">
+					<div className="flex items-center col-span-5 gap-3">
 						<div className="flex items-center gap-2">
 							<label className="block text-xs font-bold ">Store</label>
-							<select {...register("store")} className="w-full text-xs">
+							<select
+								{...register("store")}
+								className="w-full text-xs border-[1.2px] rounded-[4px]">
 								{stores &&
-									stores.map((store) => (
+									stores.map((store: identity) => (
 										<option key={store.id} value={store.id}>
 											{store.name}
 										</option>
 									))}
 							</select>
 						</div>
-						<div className="flex gap-2 text-xs">
-							<button
-								onClick={() => setGrouped(true)}
-								type="button"
-								className={`px-1 shadow-md py-1 flex gap-2 items-center ${
-									grouped
-										? "bg-login-blue text-white "
-										: "bg-white text-slate-900"
-								}`}>
-								Grouped
-								<FaRegDotCircle />
-							</button>
-							<button
-								onClick={() => setGrouped(false)}
-								type="button"
-								className={`px-1 py-1 flex gap-2 shadow-md items-center ${
-									grouped
-										? "bg-white text-slate-900"
-										: "bg-login-blue text-white"
-								}`}>
-								Ungrouped
-								<FaRegDotCircle />
-							</button>
+						<div className="flex items-center gap-2 text-xs">
+							<select
+								{...register("category")}
+								className="w-full text-xs border-[1.2px] rounded-[4px]">
+								<option selected={true} value="">
+									All Categories
+								</option>
+								{categories &&
+									categories.map((cat: identity) => (
+										<option
+											key={crypto.randomUUID()}
+											selected={category == `${cat.id}`}
+											value={cat.id}>
+											{cat.name}
+										</option>
+									))}
+							</select>
 						</div>
 					</div>
 
@@ -96,43 +108,22 @@ const AllStockItems = () => {
 			</div>
 			<div>
 				{loading && <p>Loading ...</p>}
-				{!grouped &&
-					items &&
-					items.ungrouped &&
-					items.ungrouped.length !== 0 && (
+				{items && items.length !== 0 && (
+					<div>
 						<table className="w-full mt-3 bg-primary-white ">
 							<TableHead />
-							<tbody>
-								{items.ungrouped.map((item: item) => (
-									<tr className="text-xs" key={crypto.randomUUID()}>
-										<td className="px-3">{item.name}</td>
-
-										<td className="px-3">{item.price}</td>
-									</tr>
-								))}
-							</tbody>
+							<tbody>{displayItems}</tbody>
 						</table>
-					)}
-				{grouped &&
-					items &&
-					items.grouped &&
-					items.grouped.length !== 0 &&
-					items.grouped.map((gr) => (
-						<div>
-							<p className="my-1 text-xs font-bold">{gr.name}</p>
-							<table className="w-full mt-3 bg-primary-white ">
-								<TableHead />
-								<tbody>
-									{gr.Items.map((item: item) => (
-										<tr className="text-xs" key={crypto.randomUUID()}>
-											<td className="px-3">{item.name}</td>
-											<td className="px-3">{item.price}</td>
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-					))}
+						<Pages
+							dataLength={items.length}
+							setPageNumber={setPageNumber}
+							itemsPerPage={itemsPerPage}
+						/>
+					</div>
+				)}
+				{items && items.length === 0 && (
+					<p className="my-2 text-center">No items found</p>
+				)}
 			</div>
 		</div>
 	);

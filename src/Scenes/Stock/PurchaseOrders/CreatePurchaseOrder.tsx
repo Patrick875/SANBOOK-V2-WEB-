@@ -22,7 +22,7 @@ const CreatePurchaseOrder = () => {
 	const date = watch("date");
 	const [searchResults, setSearchResults] = useState([]);
 	const [selectedItems, setSelectedItems] = useState([]);
-	let [requestItems, setRequestItems] = useState<purcPlaceholder[]>([
+	const [requestItems, setRequestItems] = useState<purcPlaceholder[]>([
 		...initialRows,
 	]);
 
@@ -85,8 +85,6 @@ const CreatePurchaseOrder = () => {
 	};
 
 	const createPurchaseOrder = async () => {
-		console.log("date", date);
-
 		const submitdata = requestItems.filter((item) => item.name !== "");
 		const data = { order: submitdata, date: new Date(date).toUTCString() };
 		const response = await postData("/stock/purchaseorder", data);
@@ -174,7 +172,6 @@ const CreatePurchaseOrder = () => {
 										placeholderText="pick a date"
 										onChange={(date) => field.onChange(date)}
 										selected={field.value}
-										locale="fr-FR"
 										showIcon
 										className="border-[1.5px] text-xs border-gray-800 rounded-[4px]"
 										icon={<IoCalendar className="w-3 h-3 text-sky-700" />}

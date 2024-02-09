@@ -81,8 +81,6 @@ function StockDashboard() {
 		"/stock/currentstock/out?page=1&itemsPerPage=5"
 	);
 
-	console.log("OUT OF STOCK ITEMS", outOfStockItems);
-
 	return (
 		<div>
 			<LocationInApp location="Current Stock" />

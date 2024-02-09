@@ -7,7 +7,7 @@ import LocationInApp from "../../../shared/LocationInApp";
 function AllSuppliers() {
 	const { register } = useForm();
 	const navigate = useNavigate();
-	const [suppliers, loading] = useFetchData("/stock/suppliers");
+	const [suppliers] = useFetchData("/stock/suppliers");
 
 	return (
 		<div>
@@ -42,6 +42,7 @@ function AllSuppliers() {
 				{suppliers &&
 					suppliers.map((supplier) => (
 						<div
+							key={supplier.id}
 							onClick={() => navigate(`${supplier.id}`)}
 							className="grid grid-cols-2 p-2 text-xs cursor-pointer">
 							<p>{supplier.name}</p>

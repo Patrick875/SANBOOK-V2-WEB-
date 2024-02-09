@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
 import PDFButton from "../../../shared/PDFButton";
@@ -7,8 +7,10 @@ import { RiEditBoxLine } from "react-icons/ri";
 import { receiveVoucher } from "../../../types";
 import TableHead from "../Common/TableHead";
 import Pages from "../../../shared/Pages";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LocationInApp from "../../../shared/LocationInApp";
+import { IoCalendar } from "react-icons/io5";
+import Datepicker from "react-datepicker";
 
 interface receiveVoucherListProps {
 	item: receiveVoucher;
@@ -45,23 +47,31 @@ const ReceiveVoucherListItem = ({ item }: receiveVoucherListProps) => {
 };
 
 function AllReceiveVauchers() {
-	const { register, watch } = useForm();
+	const { register, watch, control } = useForm();
 	const query = watch("query");
+	const currentYear = new Date().getFullYear();
+	const firstDate = new Date(currentYear, 0, 1);
+	const startDate = watch("from") || firstDate.toLocaleDateString();
+	const endDate = watch("to") || new Date().toLocaleDateString();
+
+	console.log("search dates", {
+		startDate: new Date(startDate).toISOString(),
+		endDate: new Date(endDate).toISOString(),
+	});
+
 	const itemsPerPage = 15;
 	const [pageNumber, setPageNumber] = useState<number>(0);
 	const [data, loading, , length] = useFetchData(
 		`/stock/receivevaucher?receive=${query}&page=${
 			pageNumber + 1
-		}&itemsPerPage=${itemsPerPage}`
+		}&itemsPerPage=${itemsPerPage}&startDate=${new Date(
+			startDate
+		).toISOString()}&endDate=${new Date(endDate).toISOString()}`
 	);
-
-	console.log("data", data);
-
-	const pagesVisited = pageNumber * itemsPerPage;
 
 	const displayItems =
 		data &&
-		data.slice(pagesVisited, pagesVisited + itemsPerPage).map((el) => {
+		data.map((el) => {
 			return <ReceiveVoucherListItem item={el} key={el.id} />;
 		});
 
@@ -80,13 +90,41 @@ function AllReceiveVauchers() {
 							/>
 						</div>
 						<div className="flex gap-2 ">
-							<div className="flex gap-2 text-xs justify-items-center">
+							<div className="flex items-center justify-center gap-2 text-xs">
 								<label>From</label>
-								<input type="date" className="block " />
+								<Controller
+									name="from"
+									control={control}
+									defaultValue={new Date(new Date().getFullYear(), 0, 1)}
+									render={({ field }) => (
+										<Datepicker
+											placeholderText="from"
+											onChange={(date) => field.onChange(date)}
+											selected={field.value}
+											showIcon
+											className="border-[1.5px] text-xs border-gray-800 rounded-[4px]"
+											icon={<IoCalendar className="w-3 h-3 text-sky-700" />}
+										/>
+									)}
+								/>
 							</div>
 							<div className="flex items-center gap-2 text-xs">
 								<label>To</label>
-								<input type="date" className="block " />
+								<Controller
+									control={control}
+									name="to"
+									defaultValue={new Date()}
+									render={({ field }) => (
+										<Datepicker
+											placeholderText="to"
+											onChange={(date) => field.onChange(date)}
+											selected={field.value}
+											showIcon
+											className="border-[1.5px] text-xs border-gray-800 rounded-[4px]"
+											icon={<IoCalendar className="w-3 h-3 text-sky-700" />}
+										/>
+									)}
+								/>
 							</div>
 						</div>
 					</form>

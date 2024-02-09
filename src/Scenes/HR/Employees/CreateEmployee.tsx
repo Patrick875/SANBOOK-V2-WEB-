@@ -2,18 +2,16 @@ import { BackButton } from "../../../shared/BackButton";
 import { Controller, useForm } from "react-hook-form";
 import { useFetchData } from "../../../hooks/useFetchData";
 import { CheckIcon } from "@heroicons/react/24/outline";
-import usePostData from "../../../hooks/usePostData";
 import { useState } from "react";
 import { img } from "../../../types";
 import { fileToDataURL } from "../../../types/constants";
+import instance from "../../../API";
+import toast from "react-hot-toast";
 
-interface Props {}
-
-export const CreateEmployee = (props: Props) => {
+export const CreateEmployee = () => {
 	const [deps] = useFetchData("/hr/departments");
 	const [positions] = useFetchData("/hr/positions");
-	const { postData } = usePostData();
-	const { register, handleSubmit, reset, control } = useForm();
+	const { register, handleSubmit, control } = useForm();
 	const [images, setImages] = useState<img[]>([]);
 	const handleFileChange = async (e) => {
 		const files = e.target.files;
@@ -30,11 +28,18 @@ export const CreateEmployee = (props: Props) => {
 		setImages([...imagesArray]);
 	};
 	const createEmployee = async (data) => {
-		await postData("/hr/employees", {
-			...data,
-			profileImage: images[0].data,
-			birthdate: new Date(data.birthdate).toLocaleDateString(),
-		});
+		await instance
+			.post("/hr/employees", {
+				...data,
+				profileImage: images.length !== 0 ? images[0].data : null,
+				birthdate: new Date(data.birthdate).toLocaleDateString(),
+			})
+			.then(() => {
+				toast.success("Employee created !!!");
+			})
+			.catch((err) => {
+				console.log("err", err);
+			});
 	};
 	return (
 		<div>
@@ -270,7 +275,9 @@ export const CreateEmployee = (props: Props) => {
 								))}
 						</select>
 					</div>
-					<button className="flex items-center gap-3 px-4 py-1 mt-3 bg-teal-900 text-primary-white">
+					<button
+						onClick={createEmployee}
+						className="flex items-center gap-3 px-4 py-1 mt-3 bg-teal-900 text-primary-white">
 						Submit
 						<CheckIcon className="w-5 h-5 font-bold text-white" />
 					</button>

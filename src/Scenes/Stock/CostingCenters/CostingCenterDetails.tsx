@@ -1,15 +1,17 @@
 import { Link, Outlet, useLocation, useParams } from "react-router-dom";
 import { BackButton } from "../../../shared/BackButton";
 import { useFetchData } from "../../../hooks/useFetchData";
+import { useAuth } from "../../../Context/AuthContext";
 
 function CostingCenterDetails() {
+	const { user } = useAuth();
 	const { id } = useParams();
+
 	const { pathname } = useLocation();
 	const paths = pathname.split("/");
 	const activeStyles: string = "border-b-2 border-b-purple-900";
 
 	const [costingCenter] = useFetchData(`/stock/costingcenters/${id}`);
-	console.log("costing-center", costingCenter);
 
 	return (
 		<div>
@@ -29,15 +31,17 @@ function CostingCenterDetails() {
 					}`}>
 					Requests
 				</Link>
-				<Link
-					to="settings"
-					className={`py-1 ${
-						paths.length === 5 && paths[paths.length - 1] === "settings"
-							? activeStyles
-							: ""
-					}`}>
-					Settings
-				</Link>
+				{user.role === "admin" && (
+					<Link
+						to="settings"
+						className={`py-1 ${
+							paths.length === 5 && paths[paths.length - 1] === "settings"
+								? activeStyles
+								: ""
+						}`}>
+						Settings
+					</Link>
+				)}
 			</div>
 			<div className="my-2">
 				<Outlet context={{ costingCenter, id }} />

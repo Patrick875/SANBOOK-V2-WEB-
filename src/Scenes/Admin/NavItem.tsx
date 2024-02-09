@@ -27,7 +27,7 @@ export const NavItem = ({
 				`flex text-sm items-center   ${
 					isFull ? "gap-3" : "justify-center"
 				} p-2 font-medium ${
-					isActive && location === url[url.length - 1]
+					isActive && location === url[2]
 						? `text-${defaultColor} bg-primary-white rounded-tr-[6px] rounded-bl-[6px]`
 						: " text-primary-white hover:bg-indigo-500 duration-300 ease-in-out delay-50"
 				} `

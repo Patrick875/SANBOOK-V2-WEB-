@@ -11,6 +11,7 @@ export const useFetchPaginatedData = (url: string) => {
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState();
 	const fetchData = async (url: string) => {
+		setLoading(true);
 		try {
 			const res = await instance.get(url);
 			console.log("res", res);

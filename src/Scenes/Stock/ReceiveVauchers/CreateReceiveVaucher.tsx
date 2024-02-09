@@ -281,7 +281,6 @@ function CreateReceiveVaucher() {
 										placeholderText="select received date"
 										onChange={(date) => field.onChange(date)}
 										selected={field.value}
-										locale="fr-FR"
 										showIcon
 										className="border-[1.5px] text-xs border-gray-800 rounded-[4px]"
 										icon={<IoCalendar className="w-3 h-3 text-sky-700" />}

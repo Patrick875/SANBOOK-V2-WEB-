@@ -56,7 +56,11 @@ const Stock = () => {
 	const [categories] = useFetchData("/stock/categories");
 	const [pageNumber, setPageNumber] = useState<number>(0);
 	const [itemsPerPage, setItemsPerPage] = useState<number>(15);
-	const { data: items, length } = useFetchPaginatedData(
+	const {
+		data: items,
+		loading,
+		length,
+	} = useFetchPaginatedData(
 		`/stock/currentstock?name=${name}&category=${category}&store=${store}&page=${
 			pageNumber + 1
 		}&itemsPerPage=${itemsPerPage}`
@@ -84,7 +88,7 @@ const Stock = () => {
 							<label className="block text-xs font-bold ">Categories</label>
 							<select
 								{...register("category")}
-								className="w-full px-2 text-xs border-2 rounded-sm border-slate-500">
+								className="w-full px-2  text-xs border-[1.2px] rounded-[4px]">
 								<option value="">Select ...</option>
 								{categories &&
 									categories.map((cat: identity) => (
@@ -132,7 +136,12 @@ const Stock = () => {
 					</button>
 				</div>
 			</div>
-			{items && items.length !== 0 && length !== 0 ? (
+			{loading && (
+				<p className="w-full py-8 text-center bg-white text-bold">
+					loading ...
+				</p>
+			)}
+			{!loading && items && items.length !== 0 && length !== 0 && (
 				<div>
 					<div className="mb-3 bg-white">
 						<TableHeader />
@@ -146,10 +155,6 @@ const Stock = () => {
 						itemsPerPage={itemsPerPage}
 					/>
 				</div>
-			) : (
-				<p className="w-full py-8 font-bold text-center bg-white">
-					No items found
-				</p>
 			)}
 		</div>
 	);

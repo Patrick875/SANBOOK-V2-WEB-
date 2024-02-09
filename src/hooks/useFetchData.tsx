@@ -11,7 +11,7 @@ type FetchDataResult = [
 
 export const useFetchData = <T = any,>(url: string): FetchDataResult => {
 	const [data, setData] = useState();
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [length, setLength] = useState(undefined);
 	const [error, setError] = useState();
 	const fetchData = async (url: string) => {

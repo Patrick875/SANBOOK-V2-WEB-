@@ -75,8 +75,6 @@ import CostingCenterRequests from "./Scenes/Stock/Common/CostingCenterRequests";
 import AllCostingCenterRequests from "./Scenes/Stock/CostingCenters/AllCostingCenterRequests";
 import CostingCenterRequest from "./Scenes/Stock/CostingCenters/CostingCenterRequest";
 import CostingCenterSettings from "./Scenes/Stock/CostingCenters/CostingCenterSettings";
-import HrStock from "./Scenes/HR/HRStock/HrStock";
-import AllHRRequests from "./Scenes/HR/HRStock/AllHRRequests";
 import CreateStockRequest from "./Scenes/HR/HRStock/CreateStockRequest";
 import AllRequests from "./Scenes/Stock/Requests/AllRequests";
 import RequestDetails from "./Scenes/Stock/Requests/RequestDetails";
@@ -86,7 +84,10 @@ function App() {
 	return (
 		<>
 			<AnimatePresence>
-				<Toaster position="top-center" duration={4000} />
+				<Toaster
+					position="top-center"
+					toastOptions={{ duration: 4000, position: "top-center" }}
+				/>
 				<Routes location={location} key={location.pathname}>
 					<Route path="/" element={<LoginResetLayout />}>
 						<Route index element={<Login />} />
@@ -108,7 +109,7 @@ function App() {
 						<Route path="logs" element={<Logs />} />
 					</Route>
 					<Route
-						path="/user"
+						path="/hr"
 						element={
 							<PrivateRoutes
 								element={<HRDashboard />}
@@ -134,9 +135,15 @@ function App() {
 						</Route>
 						<Route path="contracts" element={<Contracts />} />
 						<Route path="payroll" element={<Payroll />} />
-						<Route path="stock" element={<HrStock />}>
-							<Route index element={<AllHRRequests />} />
-							<Route path="create" element={<CreateStockRequest />} />
+						<Route
+							path="stock/costing-centers/:id"
+							element={<CostingCenterDetails />}>
+							<Route index element={<EstimatedStock />} />
+							<Route path="requests" element={<CostingCenterRequests />}>
+								<Route index element={<AllCostingCenterRequests />} />
+								<Route path="create" element={<CreateStockRequest />} />
+								<Route path=":requestId" element={<RequestDetails />} />
+							</Route>
 						</Route>
 						<Route path="departments" element={<Departments />}>
 							<Route index element={<AllDepartments />} />
@@ -190,7 +197,7 @@ function App() {
 								<Route index element={<EstimatedStock />} />
 								<Route path="requests" element={<CostingCenterRequests />}>
 									<Route index element={<AllCostingCenterRequests />} />
-									<Route path=":id" element={<CostingCenterRequest />} />
+									<Route path=":requestId" element={<RequestDetails />} />
 								</Route>
 								<Route path="settings" element={<CostingCenterSettings />} />
 							</Route>

@@ -48,16 +48,18 @@ const PurchaseOrderListItem = ({ item }: purchaseOrderListProps) => {
 function AllPurchaseOrders() {
 	const { register, watch } = useForm();
 	const query = watch("query");
-	const [data, loading] = useFetchData(
-		`/stock/purchaseorder?purchase=${query}`
-	);
 	const itemsPerPage = 5;
 	const [pageNumber, setPageNumber] = useState<number>(0);
-	const pagesVisited = pageNumber * itemsPerPage;
+
+	const [data, loading, , length] = useFetchData(
+		`/stock/purchaseorder?purchase=${query}&page=${
+			pageNumber + 1
+		}&itemsPerPage=${itemsPerPage}`
+	);
 
 	const displayItems =
 		data &&
-		data.slice(pagesVisited, pagesVisited + itemsPerPage).map((el) => {
+		data.map((el) => {
 			return <PurchaseOrderListItem item={el} key={el.id} />;
 		});
 
@@ -93,7 +95,7 @@ function AllPurchaseOrders() {
 					<div>
 						{displayItems}
 						<Pages
-							dataLength={data.length}
+							dataLength={length && length}
 							setPageNumber={setPageNumber}
 							itemsPerPage={itemsPerPage}
 						/>

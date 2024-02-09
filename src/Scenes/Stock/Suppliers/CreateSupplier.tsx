@@ -15,8 +15,7 @@ function CreateSupplier() {
 
 	const selectItem = (e) => {
 		e.preventDefault();
-		const selected =
-			items && items.ungrouped.filter((el) => el.id == e.target.value)[0];
+		const selected = items && items.filter((el) => el.id == e.target.value)[0];
 		setSelectedItems((prev) => [...prev, selected]);
 	};
 	const { postData } = usePostData();
@@ -63,7 +62,7 @@ function CreateSupplier() {
 							required
 							className="w-full border-2 border-gray-500">
 							{items &&
-								items.ungrouped.map((item: identity) => (
+								items.map((item: identity) => (
 									<option key={item.id} value={item.id}>
 										{item.name}
 									</option>

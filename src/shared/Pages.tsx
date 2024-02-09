@@ -2,11 +2,13 @@ import ReactPaginate from "react-paginate";
 
 interface Props {
 	itemsPerPage: number;
-	dataLength: number;
+	dataLength?: number;
 	setPageNumber: React.Dispatch<React.SetStateAction<number>>;
 }
 
 function Pages({ itemsPerPage, dataLength, setPageNumber }: Props) {
+	console.log("the length", dataLength);
+
 	const pageCount = dataLength ? Math.ceil(dataLength / itemsPerPage) : null;
 	const changePage = ({ selected }) => {
 		setPageNumber(selected);

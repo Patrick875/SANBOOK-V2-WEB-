@@ -3,12 +3,9 @@ import { useForm } from "react-hook-form";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useFetchData } from "../../hooks/useFetchData";
 
-interface Props {}
-
-export const Logs = (props: Props) => {
-	const { register, watch } = useForm();
-	const [logs, setLogs] = useState([]);
-	const [data, loading] = useFetchData("/system/userlogs");
+export const Logs = () => {
+	const { register } = useForm();
+	const [data] = useFetchData("/system/userlogs");
 
 	return (
 		<div>
@@ -35,71 +32,51 @@ export const Logs = (props: Props) => {
 				</div>
 			</form>
 			<div>
-				<table className="w-full mt-3 ">
-					<thead className="border-2 border-gray-200">
-						<tr>
-							<th className="w-20 p-3 px-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
-								Name
-							</th>
-							<th className="w-20 p-3 px-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
-								Department
-							</th>
-							<th className="w-20 p-3 px-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
-								Time
-							</th>
-							<th className="p-3 text-xs font-semibold tracking-wide text-left w-14 whitespace-nowrap">
-								Action
-							</th>
-							<th className="w-20 p-3 px-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
-								Device
-							</th>
-							<th className="w-20 p-3 px-2 text-xs font-semibold tracking-wide text-left whitespace-nowrap">
-								I.P Address
-							</th>
-						</tr>
-					</thead>
-
-					<tbody>
-						{data &&
-							data.length > 0 &&
-							data.map((el) => (
-								<tr key={crypto.randomUUID()}>
-									<td className="p-3 px-2 text-xs capitalize whitespace-nowrap">
-										{el.username}
-									</td>
-									<td className="p-3 px-2 text-xs capitalize whitespace-nowrap">
-										{el.identification}
-									</td>
-									<td className="p-3 px-2 text-xs capitalize whitespace-nowrap">
-										{new Date(el.date).toLocaleString("FR-fr")}
-									</td>
-									<td className="p-3 px-2 text-xs capitalize whitespace-nowrap">
-										<span>{el.status + " "}</span>
-										<span
-											className={`${
-												el.method === "GET"
-													? "text-indigo-600 font-medium"
-													: el.method === "POST"
-													? "text-teal-600"
-													: el.method === "DELETE"
-													? "text-pink-600"
-													: "text-slate-900"
-											}`}>
-											{el.method}
-										</span>
-										<span></span>
-										{" " + el.url}
-									</td>
-									<td className="p-3 px-2 text-sm capitalize whitespace-nowrap">
-										{el["remote-address"]}
-									</td>
-									<td className="p-3 px-2 text-sm capitalize whitespace-nowrap">
-										{el["remote-address"]}
-									</td>
-								</tr>
-							))}
-					</tbody>
-				</table>
+				<div className="grid grid-cols-6">
+					<p className="px-2 py-4 text-xs font-semibold">Name</p>
+					<p className="px-2 py-4 text-xs font-semibold">Department</p>
+					<p className="px-2 py-4 text-xs font-semibold">Time</p>
+					<p className="px-2 py-4 text-xs font-semibold">Action</p>
+					<p className="px-2 py-4 text-xs font-semibold">Device</p>
+					<p className="px-2 py-4 text-xs font-semibold">I.P Address</p>
+				</div>
+				<div>
+					{data &&
+						data.length > 0 &&
+						data.map((el) => (
+							<div className="grid grid-cols-6" key={crypto.randomUUID()}>
+								<p className="px-2 py-3 text-xs capitalize ">{el.username}</p>
+								<p className="p-3 px-2 text-xs capitalize ">
+									{el.identification}
+								</p>
+								<p className="p-3 px-2 text-xs capitalize ">
+									{new Date(el.date).toLocaleString("FR-fr")}
+								</p>
+								<p className="w-full p-3 px-2 text-xs capitalize">
+									<span className="text-wrap">{el.status + " "}</span>
+									<span
+										className={` font-bold  text-wrap ${
+											el.method === "GET"
+												? "text-indigo-600 "
+												: el.method === "POST"
+												? "text-teal-600"
+												: el.method === "DELETE"
+												? "text-pink-600"
+												: "text-slate-900"
+										}`}>
+										{el.method}
+									</span>
+									<span className="text-wrap">{" " + el.url}</span>
+								</p>
+								<p className="p-3 px-2 text-sm capitalize ">
+									{el["remote-address"]}
+								</p>
+								<p className="p-3 px-2 text-sm capitalize ">
+									{el["remote-address"]}
+								</p>
+							</div>
+						))}
+				</div>
 			</div>
 		</div>
 	);
