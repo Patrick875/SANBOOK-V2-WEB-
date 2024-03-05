@@ -24,7 +24,7 @@ export const SideBarNav = ({ navlinks, backgroundColor }: SideBarNavProps) => {
 			className={`sticky top-0 duration-500 transition-all self-start min-h-screen  ${backgroundColor} `}>
 			<div className="flex flex-col ">
 				<div className="flex items-center p-4 basis-1/8">
-					<Logo textColor="text-primary-white" />
+					<Logo textColor="text-primary-white" isMinifiable={true} />
 				</div>
 				<div className="w-full h-5/6">
 					{navlinks.map((el) => (

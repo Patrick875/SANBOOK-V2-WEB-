@@ -78,6 +78,29 @@ import CostingCenterSettings from "./Scenes/Stock/CostingCenters/CostingCenterSe
 import CreateStockRequest from "./Scenes/HR/HRStock/CreateStockRequest";
 import AllRequests from "./Scenes/Stock/Requests/AllRequests";
 import RequestDetails from "./Scenes/Stock/Requests/RequestDetails";
+import ReceptionPage from "./Scenes/Reception";
+import ReceptionDashboard from "./Scenes/Reception/Dashbaord";
+import Bookings from "./Scenes/Reception/Bookings";
+import Calendar from "./Scenes/Reception/Calendar";
+import Events from "./Scenes/Reception/Events";
+import Rooms from "./Scenes/Reception/Rooms";
+import Services from "./Scenes/Reception/Services";
+import Accounting from "./Scenes/Reception/Accounting";
+import Guests from "./Scenes/Reception/Guests";
+import CurrentBookings from "./Scenes/Reception/Bookings/CurrentBookings";
+import Reminders from "./Scenes/Reception/Bookings/Reminders";
+import UnconfirmedBookings from "./Scenes/Reception/Bookings/UnconfirmedBookings";
+import UpcomingBookings from "./Scenes/Reception/Bookings/UpcomingBookings";
+import BookingsHistory from "./Scenes/Reception/Bookings/BookingsHistory";
+import CanceledBookings from "./Scenes/Reception/Bookings/CanceledBookings";
+import CreateBookingModel from "./Scenes/Reception/Bookings/CreateBookingModel";
+import AllRooms from "./Scenes/Reception/Rooms/AllRooms";
+import RoomStatus from "./Scenes/Reception/Rooms/RoomStatus";
+import RoomRates from "./Scenes/Reception/Rooms/RoomRates";
+import RoomTypes from "./Scenes/Reception/Rooms/RoomTypes";
+import RoomReports from "./Scenes/Reception/Rooms/RoomReports";
+import CreateRoomType from "./Scenes/Reception/Rooms/CreateRoomType";
+import CreateRoom from "./Scenes/Reception/Rooms/CreateRoom";
 function App() {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -217,6 +240,42 @@ function App() {
 						</Route>
 						<Route path="reports" element={<Reports />} />
 					</Route>
+
+					<Route
+						path="/reception"
+						element={
+							<PrivateRoutes
+								element={<ReceptionPage />}
+								allowedPositions={["receptonist", "admin", "manager"]}
+							/>
+						}>
+						<Route index element={<ReceptionDashboard />} />
+						<Route path="bookings" element={<Bookings />}>
+							<Route index element={<CurrentBookings />} />
+							<Route path="create" element={<CreateBookingModel />} />
+							<Route path="reminders" element={<Reminders />} />
+							<Route path="unconfirmed" element={<UnconfirmedBookings />} />
+							<Route path="upcoming" element={<UpcomingBookings />} />
+							<Route path="history" element={<BookingsHistory />} />
+							<Route path="canceled" element={<CanceledBookings />} />
+						</Route>
+						<Route path="calendar" element={<Calendar />} />
+						<Route path="events" element={<Events />} />
+						<Route path="rooms" element={<Rooms />}>
+							<Route index element={<AllRooms />} />
+							<Route path="create" element={<CreateRoom />} />
+							<Route path="status" element={<RoomStatus />} />
+							<Route path="rates" element={<RoomRates />} />
+							<Route path="rates/create" element={<RoomRates />} />
+							<Route path="types" element={<RoomTypes />} />
+							<Route path="types/create" element={<CreateRoomType />} />
+							<Route path="reports" element={<RoomReports />} />
+						</Route>
+						<Route path="services" element={<Services />} />
+						<Route path="accounting" element={<Accounting />} />
+						<Route path="guests" element={<Guests />} />
+					</Route>
+
 					<Route
 						path="*"
 						element={

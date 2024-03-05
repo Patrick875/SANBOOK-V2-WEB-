@@ -9,7 +9,7 @@ interface documentHeaderProps {
 function DocumentHeader({ children }: documentHeaderProps) {
 	return (
 		<div className="grid justify-between w-full grid-flow-col p-4 my-4 grid-col-3">
-			<Logo textColor="bg-transparent" />
+			<Logo textColor="bg-transparent" isMinifiable={false} />
 			<div>
 				<p className="text-xs font-bold">K_DEV HOTEL</p>
 				<p className="text-xs font-bold">

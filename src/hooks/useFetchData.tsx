@@ -17,6 +17,7 @@ export const useFetchData = <T = any,>(url: string): FetchDataResult => {
 	const fetchData = async (url: string) => {
 		try {
 			const res = await instance.get(url);
+
 			if (res.data && res.data.data) {
 				setData(res.data.data);
 				setLength(res.data.length);

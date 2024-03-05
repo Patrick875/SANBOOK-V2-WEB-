@@ -62,11 +62,12 @@ export const Login = () => {
 
 	return (
 		<motion.div
-			initial={{ opacity: 0, x: -50, transition: { duration: 0.5 } }}
-			animate={{ opacity: 1, x: 0, transition: { duration: 0.8 } }}
+			initial={{ opacity: 0, x: -50 }}
+			animate={{ opacity: 1, x: 0 }}
+			transition={{ duration: 0.8 }}
 			className="basis-5/6">
 			<div className="flex justify-between">
-				<Logo textColor="text-gray-900" />
+				<Logo textColor="text-gray-900" isMinifiable={false} />
 				<p className="px-4 py-1 text-login-blue"> Login </p>
 			</div>
 			<div className="flex justify-center">

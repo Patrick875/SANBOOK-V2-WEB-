@@ -1,12 +1,14 @@
 import { useSelector } from "react-redux";
 import { NavLink, useLocation } from "react-router-dom";
 import { sideBarSizeSelector } from "../../Redux/sideBarSlice";
+import { ReactNode } from "react";
 
 interface Props {
 	page: string;
 	link: string;
 	location: string;
 	defaultColor: string;
+	children?: ReactNode;
 }
 
 export const NavItem = ({
