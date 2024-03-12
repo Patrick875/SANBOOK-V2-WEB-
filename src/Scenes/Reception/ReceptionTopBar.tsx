@@ -1,19 +1,16 @@
 import { IoIosArrowDown } from "react-icons/io";
 import { ReactNode, useState } from "react";
-import { GrServices } from "react-icons/gr";
-import { Link, NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Logo } from "../../shared/Logo";
 import { navitem } from "../../types";
-import { TbPigMoney } from "react-icons/tb";
-import { BsCalendar2Check, BsSuitcase2 } from "react-icons/bs";
-import { IoCalendarOutline, IoPeopleCircle } from "react-icons/io5";
-import { MdOutlineBedroomChild } from "react-icons/md";
-import { LuLayoutDashboard } from "react-icons/lu";
 import { useAuth } from "../../Context/AuthContext";
 import { UserLogs } from "../../assets/UserLogs";
 import UserProfileIcon from "../../assets/UserProfileIcon";
 import LogoutIcon from "../../assets/LogoutIcon";
-import { NavItem } from "../Admin/NavItem";
+
+interface topBarProps {
+	navlinks: navitem[];
+}
 
 interface dropdownItem {
 	icon?: ReactNode;
@@ -89,65 +86,14 @@ const TopNavDropdown = () => {
 	);
 };
 
-const navlinks: navitem[] = [
-	{
-		page: "Dashboard",
-		link: "",
-		icon: <LuLayoutDashboard />,
-		location: "",
-	},
-	{
-		page: "Bookings",
-		link: "bookings",
-		icon: <BsCalendar2Check />,
-		location: "bookings",
-	},
-	{
-		page: "Calendar",
-		link: "calendar",
-		icon: <IoCalendarOutline />,
-		location: "calendar",
-	},
-	{
-		page: "Events",
-		link: "events",
-		icon: <IoPeopleCircle />,
-		location: "events",
-	},
-	{
-		page: "Rooms",
-		link: "rooms",
-		icon: <MdOutlineBedroomChild />,
-		location: "rooms",
-	},
-	{
-		page: "Services",
-		link: "services",
-		icon: <GrServices />,
-		location: "services",
-	},
-	{
-		page: "Accounting",
-		link: "accounting",
-		icon: <TbPigMoney />,
-		location: "accounting",
-	},
-	{
-		page: "Guests",
-		link: "guests",
-		icon: <BsSuitcase2 />,
-		location: "guests",
-	},
-];
-
-const ReceptionTopBar = () => {
+const ReceptionTopBar = ({ navlinks }: topBarProps) => {
 	return (
-		<div className="grid w-full grid-cols-12 py-3 bg-topbar ">
+		<div className="grid w-full grid-cols-12 p-3 bg-topbar ">
 			<div className="col-span-2">
 				<Logo textColor="text-black" isMinifiable={false} />
 			</div>
 			<div className="flex justify-between col-span-10 px-4 ">
-				{navlinks.map((el) => (
+				{navlinks.map((el: navitem) => (
 					<Link
 						to={el.link}
 						className="flex items-center gap-2 text-sm text-gray-800 ">

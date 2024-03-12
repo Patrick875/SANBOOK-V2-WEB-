@@ -1,92 +1,69 @@
-import { Outlet, useLocation } from "react-router-dom";
-import { SideBarNav } from "../Admin/SideBarNav";
-import { IoIosRestaurant } from "react-icons/io";
+import { Outlet } from "react-router-dom";
+import { TbPigMoney } from "react-icons/tb";
+import { BsCalendar2Check, BsSuitcase2 } from "react-icons/bs";
+import { IoCalendarOutline, IoPeopleCircle } from "react-icons/io5";
+import { MdOutlineBedroomChild } from "react-icons/md";
 import { LuLayoutDashboard } from "react-icons/lu";
-import { LiaWarehouseSolid, LiaNotesMedicalSolid } from "react-icons/lia";
-import { CgNotes, CgBox } from "react-icons/cg";
-import { HiOutlineDocumentReport } from "react-icons/hi";
-import { GiMeat } from "react-icons/gi";
-import { CiSquareQuestion } from "react-icons/ci";
-import { MdOutlineCategory, MdDeliveryDining } from "react-icons/md";
-
-import { navitem } from "../../types";
+import { GrServices } from "react-icons/gr";
 import LayoutContainer from "../../shared/LayoutContainer";
 import OutletContainer from "../../shared/OutletContainer";
 import ReceptionTopBar from "./ReceptionTopBar";
-
-const navlinks: navitem[] = [
-	{
-		page: "Dashboard",
-		link: "",
-		icon: <LuLayoutDashboard />,
-		location: "stock",
-	},
-	{
-		page: "Requests",
-		link: "requests",
-		icon: <CiSquareQuestion />,
-		location: "requests",
-	},
-	{
-		page: "Stock",
-		link: "storage",
-		icon: <LiaWarehouseSolid />,
-		location: "storage",
-	},
-	{
-		page: "Purchase orders",
-		link: "purchase-orders",
-		icon: <CgNotes />,
-		location: "purchase-orders",
-	},
-	{
-		page: "Receive Vauchers",
-		link: "receive-vauchers",
-		icon: <LiaNotesMedicalSolid />,
-		location: "receive-vauchers",
-	},
-	{
-		page: "Suppliers",
-		link: "suppliers",
-		icon: <MdDeliveryDining />,
-		location: "suppliers",
-	},
-	{
-		page: "Costing Centers",
-		link: "costing-centers",
-		icon: <IoIosRestaurant />,
-		location: "costing-centers",
-	},
-	{
-		page: "Stores",
-		link: "stores",
-		icon: <CgBox />,
-		location: "stores",
-	},
-	{
-		page: "Item Categories",
-		link: "item-categories",
-		icon: <MdOutlineCategory />,
-		location: "item-categories",
-	},
-	{
-		page: "Stock Items",
-		link: "stock-items",
-		icon: <GiMeat />,
-		location: "stock-items",
-	},
-	{
-		page: "Reports",
-		link: "reports",
-		icon: <HiOutlineDocumentReport />,
-		location: "reports",
-	},
-];
+import { navitem } from "../../types";
 
 const ReceptionPage = () => {
+	const navlinks: navitem[] = [
+		{
+			page: "Dashboard",
+			link: "",
+			icon: <LuLayoutDashboard />,
+			location: "",
+		},
+		{
+			page: "Bookings",
+			link: "bookings",
+			icon: <BsCalendar2Check />,
+			location: "bookings",
+		},
+		{
+			page: "Calendar",
+			link: "calendar",
+			icon: <IoCalendarOutline />,
+			location: "calendar",
+		},
+		{
+			page: "Events",
+			link: "events",
+			icon: <IoPeopleCircle />,
+			location: "events",
+		},
+		{
+			page: "Rooms",
+			link: "rooms",
+			icon: <MdOutlineBedroomChild />,
+			location: "rooms",
+		},
+		{
+			page: "Services",
+			link: "services",
+			icon: <GrServices />,
+			location: "services",
+		},
+		{
+			page: "Accounting",
+			link: "accounting",
+			icon: <TbPigMoney />,
+			location: "accounting",
+		},
+		{
+			page: "Guests",
+			link: "guests",
+			icon: <BsSuitcase2 />,
+			location: "guests",
+		},
+	];
 	return (
 		<div>
-			<ReceptionTopBar />
+			<ReceptionTopBar navlinks={navlinks} />
 			<LayoutContainer>
 				<OutletContainer>
 					<div className="py-1 ">

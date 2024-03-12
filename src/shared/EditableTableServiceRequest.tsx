@@ -10,7 +10,9 @@ interface EditableTableRRequestProps {
 	cols: string[];
 }
 
-const EditableTableRequest: React.FC<EditableTableRRequestProps> = (props) => {
+const EditableTableServiceRequest: React.FC<EditableTableRRequestProps> = (
+	props
+) => {
 	const { data, setData, readOnly, headers, cols, readOnlyCols } = props;
 	const onChangeInput = (e: ChangeEvent<HTMLInputElement>, id: string) => {
 		const { name, value } = e.target;
@@ -46,13 +48,7 @@ const EditableTableRequest: React.FC<EditableTableRRequestProps> = (props) => {
 								<td key={col}>
 									<input
 										name={col}
-										value={
-											col === "name"
-												? item.Item.name
-												: item[col] === 0
-												? ""
-												: item[col]
-										}
+										value={item[col]}
 										readOnly={
 											readOnlyCols ? readOnlyCols.includes(col) : readOnly
 										}
@@ -70,4 +66,4 @@ const EditableTableRequest: React.FC<EditableTableRRequestProps> = (props) => {
 	);
 };
 
-export default EditableTableRequest;
+export default EditableTableServiceRequest;

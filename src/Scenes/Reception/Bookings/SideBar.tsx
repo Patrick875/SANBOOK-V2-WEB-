@@ -1,16 +1,8 @@
-import {
-	ArrowLeftCircleIcon,
-	ArrowRightCircleIcon,
-} from "@heroicons/react/24/outline";
-
 import { motion } from "framer-motion";
-import { useDispatch, useSelector } from "react-redux";
-import {
-	sideBarSizeSelector,
-	toggleSideBar,
-} from "../../../Redux/sideBarSlice";
-import { receptionSideNavs } from "../receptioTypes";
+import { useSelector } from "react-redux";
+import { sideBarSizeSelector } from "../../../Redux/sideBarSlice";
 import { NavLink } from "react-router-dom";
+import { receptionSideNavs } from "../types";
 interface SideBarProps {
 	navlinks: receptionSideNavs[];
 }

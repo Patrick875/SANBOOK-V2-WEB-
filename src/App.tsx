@@ -101,6 +101,24 @@ import RoomTypes from "./Scenes/Reception/Rooms/RoomTypes";
 import RoomReports from "./Scenes/Reception/Rooms/RoomReports";
 import CreateRoomType from "./Scenes/Reception/Rooms/CreateRoomType";
 import CreateRoom from "./Scenes/Reception/Rooms/CreateRoom";
+import ServicesPage from "./Scenes/Services";
+import ServicesDashboard from "./Scenes/Services/ServicesDashboard";
+import ServiceSubServices from "./Scenes/Services/Subservices";
+import AllSubservices from "./Scenes/Services/Subservices/AllSubservices";
+import CreateSubService from "./Scenes/Services/Subservices/CreateSubService";
+import SubServiceRates from "./Scenes/Services/Subservices/SubServiceRates";
+import AllServiceSales from "./Scenes/Services/SubServicesSales";
+import ServiceStock from "./Scenes/Services/Storage";
+import CurrentStock from "./Scenes/Services/Storage/CurrentStock ";
+import ServiceStockRequests from "./Scenes/Services/Storage/ServiceStockRequests";
+import AllStockRequests from "./Scenes/Services/Storage/AllStockRequests";
+import CreateServiceStockRequest from "./Scenes/Services/Storage/CreateServiceStockRequest";
+import StockRequestDetails from "./Scenes/Services/Storage/StockRequestDetails";
+import SubServiceCategories from "./Scenes/Services/Subservices/SubServiceCategories";
+import SubServiceCategoriesLayout from "./Scenes/Services/Subservices/SubServiceCategoriesLayout";
+import CreateSubServiceCategories from "./Scenes/Services/Subservices/CreateSubServiceCategories";
+import AllServiceSaleRecords from "./Scenes/Services/SubServicesSales/AllServiceSaleRecords";
+import AllServiceSaleRecordsDebts from "./Scenes/Services/SubServicesSales/AllServiceSaleRecordsDebts";
 function App() {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -274,6 +292,47 @@ function App() {
 						<Route path="services" element={<Services />} />
 						<Route path="accounting" element={<Accounting />} />
 						<Route path="guests" element={<Guests />} />
+					</Route>
+					<Route
+						path="/services/:id"
+						element={
+							<PrivateRoutes
+								element={<ServicesPage />}
+								allowedPositions={[
+									"receptonist",
+									"admin",
+									"manager",
+									"service-clerk",
+								]}
+							/>
+						}>
+						<Route index element={<ServicesDashboard />} />
+						<Route path="services" element={<ServiceSubServices />}>
+							<Route index element={<AllSubservices />} />
+							<Route path="create" element={<CreateSubService />} />
+							<Route path="rates" element={<SubServiceRates />} />
+							<Route path="categories" element={<SubServiceCategoriesLayout />}>
+								<Route index element={<SubServiceCategories />} />
+								<Route path="create" element={<CreateSubServiceCategories />} />
+							</Route>
+						</Route>
+
+						<Route path="sales" element={<AllServiceSales />}>
+							<Route index element={<AllServiceSaleRecords />} />
+							<Route path="debts" element={<AllServiceSaleRecordsDebts />} />
+						</Route>
+
+						<Route path="stock" element={<ServiceStock />}>
+							<Route index element={<CurrentStock />} />
+							<Route path="requests" element={<ServiceStockRequests />}>
+								<Route index element={<AllStockRequests />} />
+								<Route path="create" element={<CreateServiceStockRequest />} />
+								<Route
+									path="requestDetails/:reqId"
+									element={<StockRequestDetails />}
+								/>
+							</Route>
+						</Route>
 					</Route>
 
 					<Route

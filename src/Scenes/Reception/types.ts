@@ -1,3 +1,9 @@
+export interface receptionSideNavs {
+    tab: string;
+    link: string;
+    data?: number
+}
+
 export interface RoomTypeInterface {
     id: number;
     name: string;

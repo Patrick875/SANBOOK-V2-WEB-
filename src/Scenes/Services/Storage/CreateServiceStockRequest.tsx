@@ -1,20 +1,24 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { Controller, useForm } from "react-hook-form";
-import { useFetchData } from "../../../hooks/useFetchData";
-import EditableTable from "../../../shared/EditableTable";
-import { initialRows } from "../../../types/constants";
 import { useEffect, useState } from "react";
-import { purcPlaceholder } from "../../../types";
-import instance from "../../../API";
-import usePostData from "../../../hooks/usePostData";
-import PurchaseOrderFooter from "../PurchaseOrderFooter";
-import DocumentHeader from "../../../shared/DocumentHeader";
 import toast from "react-hot-toast";
 import { IoCalendar, IoRemove } from "react-icons/io5";
-import { BackButton } from "../../../shared/BackButton";
 import Datepicker from "react-datepicker";
+import usePostData from "../../../hooks/usePostData";
+import { purcPlaceholder } from "../../../types";
+import { useFetchData } from "../../../hooks/useFetchData";
+import instance from "../../../API";
+import { initialRows } from "../../../types/constants";
+import { BackButton } from "../../../shared/BackButton";
+import DocumentHeader from "../../../shared/DocumentHeader";
+import EditableTable from "../../../shared/EditableTable";
+import PurchaseOrderFooter from "../../Stock/PurchaseOrderFooter";
+import { useParams } from "react-router-dom";
+import EditableTableRequest from "../../../shared/EditableTableRequest";
+import EditableTableServiceRequest from "../../../shared/EditableTableServiceRequest";
 
-const CreatePurchaseOrder = () => {
+const CreateServiceStockRequest = () => {
+	const { id } = useParams();
 	const { postData } = usePostData();
 	const { register, watch, control } = useForm();
 	const category = watch("category") || 0;
@@ -99,9 +103,11 @@ const CreatePurchaseOrder = () => {
 		handleSearch();
 	}, [category, store]);
 	return (
-		<div className="w-full">
+		<div className="w-full p-2 bg-white">
 			<BackButton />
-			<p className="text-xs font-bold text-center">Create Purchase Order</p>
+			<p className="text-xs font-bold text-center uppercase">
+				{id} department stock request
+			</p>
 			<div className="w-full px-2 py-2 bg-white rounded-md ">
 				<form className="grid justify-between w-full grid-cols-12 px-3 py-1 ">
 					<div className="flex col-span-4 gap-2">
@@ -199,20 +205,16 @@ const CreatePurchaseOrder = () => {
 					</button>
 				</div>
 			</DocumentHeader>
-			<EditableTable
-				cols={["name", "price", "quantity", "unit"]}
-				totals={["total"]}
-				headers={["Item", "Price", "Quantity", "Unit", "Total"]}
-				subtotalCols={["price", "quantity"]}
+			<EditableTableServiceRequest
+				cols={["name", "quantity", "unit"]}
+				headers={["Item", "Quantity", "Unit"]}
 				data={requestItems}
 				readOnly={false}
-				type="purchase order"
 				setData={setRequestItems}
-				hidePrice={false}
 			/>
 			<PurchaseOrderFooter />
 		</div>
 	);
 };
 
-export default CreatePurchaseOrder;
+export default CreateServiceStockRequest;

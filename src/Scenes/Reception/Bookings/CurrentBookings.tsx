@@ -2,12 +2,10 @@ import { Link } from "react-router-dom";
 import { useFetchData } from "../../../hooks/useFetchData";
 import { roomBookingInterface } from "../types";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { useForm, Controller } from "react-hook-form";
-import Datepicker from "react-datepicker";
-import { IoCalendar } from "react-icons/io5";
+import { useForm } from "react-hook-form";
 function CurrentBookings() {
 	const [bookings] = useFetchData("/reception/roomreservation");
-	const { register, control } = useForm();
+	const { register } = useForm();
 
 	return (
 		<div>

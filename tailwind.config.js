@@ -20,6 +20,9 @@ export default {
 				"top-bar": "#F1F5F9",
 				"search-bg": "#F1F5F9",
 			},
+			backgroundImage: {
+				"laundry-bg": "url('/laundry-bg.svg')",
+			},
 			fontFamily: {
 				nunito: ["Nunito"],
 				loginDes: ["loginDes"],
